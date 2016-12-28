@@ -1,5 +1,15 @@
 #Analysis of performance [issue 675534](https://bugs.chromium.org/p/chromium/issues/detail?id=675534).
 
+[flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html) is used to test the performance of layout. Using js code below to trigger layout of whole <body>.
+
+	run: function() {
+            document.body.style.width = ++index % 2 ? "99%" : "98%";
+            document.body.offsetHeight;
+        }
+
+It's brilliant!
+
+
 ##Reason for this performance isssue:
 
 According to the logic of flexbox layout.
@@ -45,7 +55,7 @@ Back to [flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/s
 
 Reusing the old supercluster's multiplier seems to make it more consistent.
 
-Maybe we could make a slightly change  to [flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html). Make the item1 and item2 of the first flexbox non empty.
+In order to make flexbox-lots-of-data.html be comparable with before. Maybe we could make a slightly change  to [flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html). Make the item1 and item2 of the first flexbox non empty.
 
 
 ##The apparence of flexbox-lots-of-data.html
