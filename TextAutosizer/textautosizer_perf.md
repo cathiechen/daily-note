@@ -1,6 +1,6 @@
 #Analysis of performance [issue 675534](https://bugs.chromium.org/p/chromium/issues/detail?id=675534).
 
-[flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html) is used to test the performance of layout. Using js code below to trigger layout of whole <body>.
+[flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html) is used to test the performance of layout. Using js code below to trigger layout of whole body element.
 
 	run: function() {
             document.body.style.width = ++index % 2 ? "99%" : "98%";
