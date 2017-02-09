@@ -38,7 +38,9 @@
 	- 解决思路：跟table的差不多。
 		- 在处理ruby的时候，把inner block inflate掉。必须在layout run之前进行，因为run是inline-block，所以它的宽度是由内容决定的。如果在layout run之后autosize，run的宽度不够，会出现折行的问题。
 		- skip run，不skip的话，会创建cluster
-
+- 横竖屏切换的排版问题
+	- 原因：字体大小改变后，需要通知父亲节点重新计算preferredWidth，但一般情况下，父亲节点都是block的，且inline-block一般会创建自己的cluster，一般不会被放大字体，所以只要mark text的inline parent重新计算preferredWidth即可。但ruby有一个inline-block被skip掉了。所以横竖屏切换时，字体发生变化，但inline-block没被通知到重新计算preferredWidth，所以，横竖屏的时候就悲剧了
+	- 解决思路：在mark preferredWidthDirty时，判断若已经skip inlineblock，则让这个mark MarkContainerChain:)
 
 
 
