@@ -1,0 +1,64 @@
+#Life of a Chromium Developer
+
+基本上是翻译网上这篇[文章](https://docs.google.com/presentation/d/1abnqM9j6zFodPHA38JG1061rG2iGj_GABxEDgZsdbJg/present?slide=id.i5). 英语差，看完了后，把翻译留下来，以便后续翻阅。
+
+- 基本流程是：
+	- 更新代码：`git pull --rebase && gclient sync`
+	- 改代码...
+	- 上传代码到codereview: `git cl upload`
+	- 当然如果你是committer你可以: `git cl try`
+- handy links: ![handy links](http://i.imgur.com/RRHLlB8.png)
+- src目录下包含所有代码，依赖的代码，core只是其中一部分
+- 简单讲 getting the code 也就2步(时间？)
+	- 安装 depot tools
+	- fetch the code
+- depot tools
+	- 由大量scripts和utilities组成
+	- 管理chromium source tree下所有的checkout
+	- 生成跟平台相关的build files
+	- upload修改到RietveId review也是它做的（好棒！）
+	- 主要的utilities
+		- gclient：工作是下载代码，并生成build files
+		- git-cl: 跟review和try server相关
+	- depot tools只能通过git安装
+	- gclient每次run的时候，都会尝试更新自己，有可能会失败
+	- gclient sync：更新代码+生成build filse(gclient runhooks)
+- 编译：ninja
+	- `gn gen out/xxx`: 生成out/xxx目录
+	- `gn args out/xxx`： 配置[编译选项](https://www.chromium.org/developers/gn-build-configuration)。记得吗？你改过的，`is_component_build = false`，改完后编译巨慢
+	- `ninja -C out/xxx content_shell_apk`： 编译contentshell
+	- 编不过怎么办？查看[waterfall](https://build.chromium.org/p/chromium/waterfall)上的状态是否是绿的，不是？想办法弄个绿的
+	- link错误怎么处理？ 试试delete output文件
+- debugging
+	- 需要attach到相应的render process，不要尝试单process，貌似有bug: `build/android/adb_gdb_content_shell --output-directory="out/Release"  --sandboxed=13 --su-prefix="su -c"`. 具体见[文档](https://chromium.googlesource.com/chromium/src/+/master/docs/android_debugging_instructions.md)
+- making good changes
+	- bug tracker
+	- 代码里面的`TODO/FIXME`
+	- [code style guide](https://chromium.googlesource.com/chromium/src/+/master/styleguide/c++/c++.md), pdr推荐的这个[版本](https://google.github.io/styleguide/cppguide.html)更全，正在尝试翻译它，感觉还可以学到很多C++的知识点!
+- Testing
+	- unit test（gtest）
+	- browser test（gtest）
+	- performance test（gtest）
+	- layout test（html对比）
+	- valgrind (跟memory/thread相关)
+- try server
+	- 这是在服务器上跑全套test cases去测试你的patch。嗯，很酷是吧？ 但需要先成为[committer](http://dev.chromium.org/getting-involved/become-a-committer)!
+	- try server上不能测试binary content、CRL相关修改
+- review
+	- `git cl upload`
+	- `BUG=, TEST=`, 没有bug的话，可以新建一个
+- tips
+	- write a good description
+	- add test case
+	- keep patch small
+	- discuss first
+- guidelines
+	- do the right thing not the fast thing
+	- 添加相关人员到reviewer list
+	- 所有问题解决了再commit
+- don't commit and leave(保持IRC在线)
+- [become a committer](http://dev.chromium.org/getting-involved/become-a-committer), committer has the right to access git repository, and can use try server.
+- IRC，一种IM, channel: #chromium
+- 解决疑问
+	- do your own research: logs, old emails etc.
+	- IRC, email相关人士，描述问题时带上平台和版本！
