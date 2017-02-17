@@ -12,7 +12,7 @@ disscussed in [codereview](https://codereview.chromium.org/2683553002/)
 
 ##触发条件
 - The style of LayoutText is only changed by `setStyleInternal()`, e.g. rotated the autosized page.
-- Triggle `LayoutText::computePreferredLogicalWidths()` during `layout()`. e.g. page with <ruby>, [example page](./glyphOverflow.html)
+- Triggle `LayoutText::computePreferredLogicalWidths()` during `layout()`. e.g. page with ruby, [example page](./glyphOverflow.html)
 - Some text change from `glyphOverflow.isZero` to `!glyphOverflow.isZero`, see the log below:
 
 Log of 'n' with 'font-family:Times New Roman;'，font-size:12px~30px:
