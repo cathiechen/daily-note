@@ -5,6 +5,9 @@ gn ls out/Release/
 gn args out/Release 设置编译变量
 ninja -C out/Release content_unittests
 run gtest:
+更新代码：
+ git pull --rebase && gclient sync
+
 
 webkit_unit_tests:
 ninja -C out/Release webkit_unit_tests
