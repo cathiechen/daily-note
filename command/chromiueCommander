@@ -99,3 +99,20 @@ bf9901feb0c46cefbd5e7af40fe252a6a92d52cb
 
 
 TRACE_EVENT0("blink,benchmark", "TextAutosizer::markSuperclusterForConsistencyCheck");
+
+打印layout tree：
+diff --git a/third_party/WebKit/Source/core/layout/LayoutView.cpp b/third_party/WebKit/Source/core/layout/LayoutView.cpp
+index e45c1c6..25bd86e 100644
+--- a/third_party/WebKit/Source/core/layout/LayoutView.cpp
++++ b/third_party/WebKit/Source/core/layout/LayoutView.cpp
+@@ -284,6 +284,13 @@ void LayoutView::layout() {
+ 
+   layoutContent();
+ 
++  WTFLogAlways("===============showLayoutTree begin===================");
++  showLayoutTree(this);
++  WTFLogAlways("===============showLayoutTree end===================");
++  WTFLogAlways("===============showLineTree begin=====================");
++  showLineTree(this);
++  WTFLogAlways("================showLineTree end======================");
+
