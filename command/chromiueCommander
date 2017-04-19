@@ -116,3 +116,11 @@ index e45c1c6..25bd86e 100644
 +  showLineTree(this);
 +  WTFLogAlways("================showLineTree end======================");
 
+BlockPainter::intersectsPaintRect
+    //WTFLogAlways("AnonymousBlock=%p, BlockPainter::intersectsPaintRect overflowRect(%d, %d, %d, %d) after addElementVisualOverflowRects",
+    //              &m_layoutBlock, overflowRect.x().toInt(), overflowRect.y().toInt(), overflowRect.width().toInt(), overflowRect.height().toInt());
+
+  //WTFLogAlways("%p, BlockPainter::intersectsPaintRect overflowRect(%d, %d, %d, %d) after unite visualOverflowRect",
+  //            &m_layoutBlock, overflowRect.x().toInt(), overflowRect.y().toInt(), overflowRect.width().toInt(), overflowRect.height().toInt());
+
+
