@@ -1,4 +1,4 @@
-#fontsize
+# fontsize
 问题源于写td的gtest时，无法通过style正确获取td的fontsize的值，specific和computed都不行；div的却可以正确获取。原因是settings的defaultfontsize没设置，为0，所以FontBuilder::updateSpecifiedSize时算出来的size是-1。嗯，先研究一下fontsize的机制再说。
 测试用例：
 
@@ -11,7 +11,7 @@
 	</body>
 	</html>
 
-##fontDescription
+## fontDescription
 - 是什么：
 	- 描述font的状态：各种size, 各种样式
 	- 对外接口：提供改变fontDescription状态的接口
@@ -19,7 +19,7 @@
 - 怎么用：字体css变化、scale变化等，都可以取出fd来，设置不同的值，然后再往style设置fd，这样页面就是自动更新
 - 保存：styleinheriteddata中保存
 
-##fontbuilder
+## fontbuilder
 - 是什么：负责创建和改变fd
 	- 各种set
 	- 保存各种页面状态, 如: didChangeEffectiveZoom()
@@ -39,12 +39,12 @@
 		...
 	}
 
-##StyleResolverState
+## StyleResolverState
 - 是什么：这个应该是保存一个element的style的所有状态
 - 创建：局部变量，styleforelement的时候会创建
 - 使用：
 
-##有用的堆栈
+## 有用的堆栈
 
 document的font创建：
 

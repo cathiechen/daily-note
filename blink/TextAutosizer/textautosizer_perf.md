@@ -1,4 +1,4 @@
-#Analysis of performance [issue 675534](https://bugs.chromium.org/p/chromium/issues/detail?id=675534).
+# Analysis of performance [issue 675534](https://bugs.chromium.org/p/chromium/issues/detail?id=675534).
 
 [flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html) is used to test the performance of layout. Using js code below to trigger layout of whole body element.
 
@@ -10,7 +10,7 @@
 It's brilliant!
 
 
-##Reason for this performance isssue:
+## Reason for this performance isssue:
 
 According to the logic of flexbox layout.
 
@@ -34,7 +34,7 @@ Case 2, layoutFlexItems() will layout children in this order: item1, item2, item
 
 Back to [flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html). There are many flexboxs like case 1. After autosize these flexboxs will become case 2. Cause the enlarging of text font size will make "one-line text" to "multi-line text". And it'll trigger 600+ times layout more than non autosize. So that's why this CL cause the performance issue.
 
-##Difference between before and after this CL
+## Difference between before and after this CL
 
 	----------------------------------------------------------------------
 	          | first layout pass | second and subsequent layout pass 
@@ -51,14 +51,14 @@ Back to [flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/s
 	- after CL: **reuse the old supercluster's multiplier from the first layout pass**, won't recalculate multiplier at all.
 
 
-##Solution
+## Solution
 
 Reusing the old supercluster's multiplier seems to make it more consistent.
 
 In order to make flexbox-lots-of-data.html be comparable with before. Maybe we could make a slightly change  to [flexbox-lots-of-data.html](https://chromium.googlesource.com/chromium/src/+/master/third_party/WebKit/PerformanceTests/Layout/flexbox-lots-of-data.html). Make the item1 and item2 of the first flexbox non empty.
 
 
-##The apparence of flexbox-lots-of-data.html
+## The apparence of flexbox-lots-of-data.html
 
 before CL:
 

@@ -1,8 +1,8 @@
-#font相关
+# font相关
 
 画了一整天的流程图，尽量把它记下来吧，不然过几天又忘了。其实忘得差不多了！
 
-##fontcache
+## fontcache
 最重要的应该是fontcache。font信息的存储方式。
 
 - fontCache(global)
@@ -35,7 +35,7 @@
 					- key： 通过特定方法将string上的内容和其他信息，生成一个hash，这个hash作为key
 
 
-##如何使用fontcache?
+## 如何使用fontcache?
 
 - fontSelector(cssFontCacheClient)
 	- GenericFontFamilySettings

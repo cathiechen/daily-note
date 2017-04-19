@@ -1,13 +1,13 @@
-#google test
+# google test
 [gtest github](https://github.com/google/googletest)  
 [中文学习网站](http://www.cnblogs.com/coderzh/archive/2009/04/12/1434155.html)
 
-##gtest 是如何实现的
+## gtest 是如何实现的
 - unittest: 单例, 全局只有一个. 负责保存和运行testcases.
 - testinfo： 每个TEST或TEST_F由两部分组成：test class和一个全局的变量testinfo。testinfo包含函数名字之类的信息。还包含一个重要的成分：factory，可以创建出一个testcase
 - testcase： 这个是一个test class，包含testbody，这个是我们写的测试的具体实现
 
-##总结
+## 总结
 
 gtest设计是很简单很巧妙的。但由于很好学习开源代码的经验，所以还是晕了很久。主要困扰我的问题：
 

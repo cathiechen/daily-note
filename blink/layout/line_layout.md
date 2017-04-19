@@ -1,8 +1,8 @@
-#inline layout
+# inline layout
 
 line layout 一直以来是个盲区，最近顶着硕大的压力，终于看到了一些东西，记录下来。
 
-##流程
+## 流程
 比block的复杂，line在layout之前，需要做一些处理
 
 - line是如何layout出来的：
@@ -20,7 +20,7 @@ line layout 一直以来是个盲区，最近顶着硕大的压力，终于看�
 
 这样就排好一行了，如果还有下一行，继续，分行+layout
 
-##重要数据结构
+## 重要数据结构
 
 - runs
 - inlinebox, 基类，一般对应一段文字，

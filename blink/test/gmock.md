@@ -1,21 +1,21 @@
-#gmock
+# gmock
 
 gmock是在开发过程中测试接口的调用情况。比如调用多少次。
 
-##时间
+## 时间
 你的功能完成了，其他人的接口还没实现好。
 
-##学习资料
+## 学习资料
 [gitbud](https://github.com/google/googletest/tree/master/googlemock)
 
-##使用方法：
+## 使用方法：
 	1. Include gmock/gmock.h
 	2. 创建一个集成接口的类，所以的接口都是virtual的
 	3. 使用宏实现这些接口
 	4. 测试，具体语法看
 [github CheatSheet](https://github.com/google/googletest/blob/master/googlemock/docs/CheatSheet.md)
 
-##测试代码
+## 测试代码
 下面这段代码是抄的拉，具体看docs...
 
     #include "path/to/mock-turtle.h"

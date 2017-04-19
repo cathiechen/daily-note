@@ -1,4 +1,4 @@
-#Life of a Chromium Developer
+# Life of a Chromium Developer
 
 基本上是翻译网上这篇[文章](https://docs.google.com/presentation/d/1abnqM9j6zFodPHA38JG1061rG2iGj_GABxEDgZsdbJg/present?slide=id.i5). 英语差，看完了后，把翻译留下来，以便后续翻阅。
 

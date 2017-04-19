@@ -1,11 +1,11 @@
-#link import
+# link import
 `<link rel="import" href="xxx">`
 
 [issue](https://bugs.chromium.org/p/chromium/issues/detail?id=629236&q=label%3AHotlist-GoodFirstBug%20component%3ABlink%3ELayout&colspec=ID%20Pri%20M%20Stars%20ReleaseBlock%20Component%20Status%20Owner%20Summary%20OS%20Modified)
 
 [引入的修改](https://chromium.googlesource.com/chromium/src/+/6e22c58ca54e6b5d6584fdb21818bf78973ed893%5E%21/third_party/WebKit/Source/core/css/resolver/StyleResolver.cpp)
 
-##过程
+## 过程
 重现问题：
 
 	<div>hello</div>
@@ -42,10 +42,10 @@ document.h:
 - 整个流程在`styleForElement`中被block了。原因是它有个import，没下完。
 - 这个bug只会发生在js动态创建import，并加入dom树中。原因是js动态创建，他们没法block script，所以才会继续执行js，才会调用到`getBoundingClientRect`，才有后面的事情。
 
-##疑问
+## 疑问
 `import`是否应该阻塞render？如果你允许js继续执行`getBoundingClientRect`，那你就不该阻塞render.
 
-##关于`import`
+## 关于`import`
 - [标准](http://w3c.github.io/webcomponents/spec/imports/#dfn-import-async-attribute)
 - [如何使用](https://www.html5rocks.com/en/tutorials/webcomponents/imports/)
 - 作为[web compornent](https://developer.mozilla.org/en-US/docs/Web/Web_Components)中打包资源用的。

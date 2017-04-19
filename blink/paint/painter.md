@@ -1,15 +1,15 @@
-#painter
+# painter
 paint改动比较大，以前老是看不懂，现在尝试看一下。
 paint分不同的阶段，什么background、content、mask之类的。一层一层地画。还有graphiccontext，脏区域之类的问题。所以还是比较复杂。
 现在paint变了，每个objec都有自己的painter，比如：基类objectpaint, blockpaint, tablepaint, tablecellpaint等等，这样结构比较简单一点。
 
-##objectpaint
+## objectpaint
 - 目录位于：src/third_party/WebKit/Source/core/paint/
 - 与layout最近的一层paint。
 - objectpaint以及它的子类，会在paint()中，把自己需要paint的各个阶段paint出来，并生成display item添加到下一次paint的displayitemlist中。displayitem的生成，可以是用drawrecord画，也可以是从currentPaintArtifact中获取可复用的display item
 - 具体处理跟不同object的paint算法相关，如block，table等等
 
-##displayItem
+## displayItem
 There will be one DisplayItem for each paint phase of each Render object. 
 
 - 主要组成:
@@ -21,7 +21,7 @@ There will be one DisplayItem for each paint phase of each Render object.
 - 创建
 	- 通过drawrecord创建。drawrecord会创建一个displayItemList里面包含displayitem
 
-##drawingDisplayItem
+## drawingDisplayItem
 displayItem的一个子类。 displayItem结构其实很简单，没有保存指令的地方，指令应该是保存在子类中的
 
 - 主要组成: skpicture
@@ -29,7 +29,7 @@ displayItem的一个子类。 displayItem结构其实很简单，没有保存指
 
 	`m_context.getPaintController().createAndAppend<DrawingDisplayItem>(...)`
 
-##DrawingRecord
+## DrawingRecord
 - 重要组成
 	- graphiccontext
 	- displayitemclient
@@ -38,7 +38,7 @@ displayItem的一个子类。 displayItem结构其实很简单，没有保存指
 	- 构造：gc.beginRecord
 	- 析构：gc.restore, 往paintcontroller里面创建并添加displayItem
 
-##paintController
+## paintController
 这个类比较复杂，主要负责displayItem和paintchunk的管理，以及一些index，还有cache的一些流程
 
 - 主要组成：
