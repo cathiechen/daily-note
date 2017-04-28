@@ -123,4 +123,3 @@ BlockPainter::intersectsPaintRect
   //WTFLogAlways("%p, BlockPainter::intersectsPaintRect overflowRect(%d, %d, %d, %d) after unite visualOverflowRect",
   //            &m_layoutBlock, overflowRect.x().toInt(), overflowRect.y().toInt(), overflowRect.width().toInt(), overflowRect.height().toInt());
 
-
