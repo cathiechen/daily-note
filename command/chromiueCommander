@@ -50,6 +50,7 @@ how to set contentshell debuggable?
 python third_party/WebKit/Tools/Scripts/run-webkit-tests fast/text-autosizing  -t Default --android --no-pixel-tests
 
 出现permission deny问题的改法：
+如果有问题，先改这个文件试试，所有的命令都加上su -c
 --- a/third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/android.py
 +++ b/third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/android.py
 @@ -729,31 +729,31 @@ class ChromiumAndroidDriver(driver.Driver):
@@ -143,8 +144,14 @@ bf9901feb0c46cefbd5e7af40fe252a6a92d52cb
 本地最新的版本：
 8eb8f63428d6cfd04566f93ef23232dac1c44430
 
+trace:
+  1. TRACE_EVENT0("blink,benchmark", "TextAutosizer::markSuperclusterForConsistencyCheck");
+  
+  2. TRACE_EVENT_BEGIN1("blink,devtools.timeline", "UpdateLayoutTree", "beginData",
+                     InspectorRecalculateStylesEvent::Data(GetFrame()));
 
-TRACE_EVENT0("blink,benchmark", "TextAutosizer::markSuperclusterForConsistencyCheck");
+  TRACE_EVENT_END1("blink,devtools.timeline", "UpdateLayoutTree",
+                   "elementCount", element_count);
 
 打印layout tree：
 diff --git a/third_party/WebKit/Source/core/layout/LayoutView.cpp b/third_party/WebKit/Source/core/layout/LayoutView.cpp
