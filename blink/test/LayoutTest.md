@@ -16,6 +16,9 @@
 - `git cl try`
 - `webkit-patch rebaseline-cl`
 - ps:成为committer先，咩哈哈...[详见](https://groups.google.com/a/chromium.org/forum/#!starred/blink-dev/A4HwldX-wFo)
+- update: 哇，终于取得了try bot access.. 感谢男神：），下面说下如何用吧：
+	- 第一遍'third_party/WebKit/Tools/Scripts/webkit-patch rebaseline-cl'，触发几个服务器的try bot
+	- 等到所有服务器都跑完后，没有错误，再跑一遍'third_party/WebKit/Tools/Scripts/webkit-patch rebaseline-cl'，就可以把样例下载下来了。
 
 
 ## [XUnit tests](https://en.wikipedia.org/wiki/XUnit) 框架
