@@ -187,3 +187,10 @@ BlockPainter::intersectsPaintRect
   //WTFLogAlways("%p, BlockPainter::intersectsPaintRect overflowRect(%d, %d, %d, %d) after unite visualOverflowRect",
   //            &m_layoutBlock, overflowRect.x().toInt(), overflowRect.y().toInt(), overflowRect.width().toInt(), overflowRect.height().toInt());
 
+
+## 如何带flag跑起content-shell
+
+- `build/android/adb_run_content_shell --enable-logging --v=1`
+- `adb shell am start -n org.chromium.content_shell_apk/.ContentShellActivity -es --v=1`
+- ` adb shell 'echo "chrome --enable-logging --v=1" > /data/local/tmp/content-shell-command-line'` 然后在跑content-shell
+
