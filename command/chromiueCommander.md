@@ -1,28 +1,32 @@
-查看可编译的对象
+# 一些经常用到的命令
+## 查看可编译的对象
 gn ls out/Release/
 
-编译gtest：
+## 编译gtest：
 gn args out/Release 设置编译变量
 ninja -C out/Release content_unittests
 run gtest:
-更新代码：
- git pull --rebase && gclient sync
 
+## 更新代码：
 
-webkit_unit_tests:
+git pull --rebase && gclient sync
+
+## webkit_unit_tests:
 ninja -C out/Release webkit_unit_tests
-out/Release/bin/run_webkit_unit_tests --gtest-filter TextAutosizerTest.*
 
+out/Release/bin/run_webkit_unit_tests --gtest-filter TextAutosizerTest.*
 
 out/Release/bin/run_content_browsertests --gtest-filter File/MediaTest.VideoTulipWebm*
 
-编译跑contentshell：
+## 编译跑contentshell：
 ninja -C out/Release content_shell_apk
 build/android/adb_install_apk.py out/Release/apks/ContentShell.apk
-gdb:
+
+## gdb:
 build/android/adb_gdb_content_shell --output-directory="out/Release"  --sandboxed=13 --su-prefix="su -c"
 
-how to log outside webkit?
+## how to log outside webkit?
+``````
 #include "base/logging.h"
 LOG(WARNING) << "window_width_dip=" << window_width_dip << "content_width_css=" << content_width_css;
 
@@ -30,10 +34,40 @@ LOG(WARNING) << "window_width_dip=" << window_width_dip << "content_width_css=" 
 #define AUTOSIZING_DOM_DEBUG_INFO 1
 
 how to log inside webkit?
+// deprecated... Use LOG pls :)
 #define LAYOUT_AUTOSIZING_LOG(...) WTFLogAlways(__VA_ARGS__)
 toLayoutText(layoutObject)->plainText().ascii().data()
 
-how to set contentshell debuggable?
+void showNode(const blink::Node* node) {
+  if (node)
+    LOG(INFO) << *node;
+  else
+    LOG(INFO) << "Cannot showNode for <null>";
+}
+
+void showTree(const blink::Node* node) {
+  if (node)
+    LOG(INFO) << "\n" << node->ToTreeStringForThis().Utf8().data();
+  else
+    LOG(INFO) << "Cannot showTree for <null>";
+}
+
+void showNodePath(const blink::Node* node) {
+  if (node) {
+    std::stringstream stream;
+    node->PrintNodePathTo(stream);
+    LOG(INFO) << stream.str();
+  } else {
+    LOG(INFO) << "Cannot showNodePath for <null>";
+  }
+}
+
+
+G(INFO) << "cclog GetParentOfFirstLineBox curr_child=" << curr_child;
+
+`````
+
+## how to set contentshell debuggable?
 --- a/content/shell/android/shell_apk/AndroidManifest.xml.jinja2
 +++ b/content/shell/android/shell_apk/AndroidManifest.xml.jinja2
 @@ -22,7 +22,8 @@
@@ -46,7 +80,7 @@ how to set contentshell debuggable?
          <activity android:name="ContentShellActivity"
                    android:launchMode="singleTask"
 
-跑layouttest:
+## 跑layouttest:
 python third_party/WebKit/Tools/Scripts/run-webkit-tests fast/text-autosizing  -t Default --android --no-pixel-tests
 
 出现permission deny问题的改法：
@@ -110,7 +144,7 @@ third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/android.py /big/cath
 
 
 
-git cl的一些命令：
+## `git cl`的一些命令：
 git cl format
 git cl upload
 git cl config
@@ -121,7 +155,7 @@ git diff > /big/cathie/autosize_td.diff
 git apply /big/cathie/autosize_td.diff
 
 
-Gtest跟su相关的修改：
+## Gtest跟su相关的修改：
 third_party/catapult/devil/devil/android/device_utils.py
 --- a/devil/devil/android/device_utils.py
 +++ b/devil/devil/android/device_utils.py
@@ -135,16 +169,8 @@ third_party/catapult/devil/devil/android/device_utils.py
 
 
 
-提交的版本：
-bf9901feb0c46cefbd5e7af40fe252a6a92d52cb
 
-提交之前的版本：
-90d4ea3d543f0031769b3aacac2d3e084b95fb7d
-
-本地最新的版本：
-8eb8f63428d6cfd04566f93ef23232dac1c44430
-
-trace:
+## trace:
   1. TRACE_EVENT0("blink,benchmark", "TextAutosizer::markSuperclusterForConsistencyCheck");
   
   2. TRACE_EVENT_BEGIN1("blink,devtools.timeline", "UpdateLayoutTree", "beginData",
@@ -153,22 +179,7 @@ trace:
   TRACE_EVENT_END1("blink,devtools.timeline", "UpdateLayoutTree",
                    "elementCount", element_count);
 
-打印layout tree：
-diff --git a/third_party/WebKit/Source/core/layout/LayoutView.cpp b/third_party/WebKit/Source/core/layout/LayoutView.cpp
-index e45c1c6..25bd86e 100644
---- a/third_party/WebKit/Source/core/layout/LayoutView.cpp
-+++ b/third_party/WebKit/Source/core/layout/LayoutView.cpp
-@@ -284,6 +284,13 @@ void LayoutView::layout() {
- 
-   layoutContent();
- 
-+  WTFLogAlways("===============showLayoutTree begin===================");
-+  showLayoutTree(this);
-+  WTFLogAlways("===============showLayoutTree end===================");
-+  WTFLogAlways("===============showLineTree begin=====================");
-+  showLineTree(this);
-+  WTFLogAlways("================showLineTree end======================");
-
+## 有用的log：
 BlockPainter::intersectsPaintRect
     //WTFLogAlways("AnonymousBlock=%p, BlockPainter::intersectsPaintRect overflowRect(%d, %d, %d, %d) after addElementVisualOverflowRects",
     //              &m_layoutBlock, overflowRect.x().toInt(), overflowRect.y().toInt(), overflowRect.width().toInt(), overflowRect.height().toInt());
