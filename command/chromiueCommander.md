@@ -26,6 +26,7 @@ build/android/adb_install_apk.py out/Release/apks/ContentShell.apk
 build/android/adb_gdb_content_shell --output-directory="out/Release"  --sandboxed=13 --su-prefix="su -c"
 
 ## how to log outside webkit?
+
 ``````
 #include "base/logging.h"
 LOG(WARNING) << "window_width_dip=" << window_width_dip << "content_width_css=" << content_width_css;
@@ -65,7 +66,12 @@ void showNodePath(const blink::Node* node) {
 
 G(INFO) << "cclog GetParentOfFirstLineBox curr_child=" << curr_child;
 
-`````
+```
+
+
+logcat 过滤：
+adb logcat -c && adb logcat chromium:E *:S
+
 
 ## how to set contentshell debuggable?
 --- a/content/shell/android/shell_apk/AndroidManifest.xml.jinja2
