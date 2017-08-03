@@ -27,7 +27,7 @@ build/android/adb_gdb_content_shell --output-directory="out/Release"  --sandboxe
 
 ## how to log outside webkit?
 
-``````
+```
 #include "base/logging.h"
 LOG(WARNING) << "window_width_dip=" << window_width_dip << "content_width_css=" << content_width_css;
 
