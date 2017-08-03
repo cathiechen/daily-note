@@ -71,6 +71,30 @@ LOG(INFO) << "cclog GetParentOfFirstLineBox curr_child=" << curr_child;
 log打不出来怎么办？
 重启手机，因为log在跑layouttest的时候被重定向到某个不知名的角落了。。
 
+[layouttest redirect](https://codereview.chromium.org/2540603004/): 这个patch。。。
+- 把原来layout test的“fifo”逻辑去除了。
+	- 原来的逻辑：`base::android::CreateFIFO(path, 0666)`
+	- `base::android::RedirectStream(stdout, stdout_fifo, "w")`
+	- 这样就可以把stdin, stdout, stderr重定向到path文件里面，这样就可以通过这些fifo进行交互
+- 新逻辑：
+	- 主线程给IO线程发送一个task，让io线程执行`CreateAndConnectSocket()`,闭包（`base::Bind`）你还记得吗？然后就等待消息
+	- IO线程执行完`CreateAndConnectSocket()`后，发送signal回来
+		- `CreateAndConnectSocket()`： 创建socket.
+			```
+			  net::CompletionCallback connect_completed =
+      				base::Bind(&ConnectCompleted,
+                 		base::Bind(socket_connected, base::Passed(std::move(socket))));
+			```
+		- `socket_connected`是主线程传过来的闭包，
+			- FinishRedirection，socket创建完毕，保存socket，重置fd
+				- add_socket:把socket添加到`ScopedAndroidConfiguration`中的socket_数组里面
+				- RedirectStdout： `dup2(fd, STDOUT_FILENO)`, 大概这样就把stdout重定向了吧。。。
+		- `result = socket_ptr->Connect(storage, connect_completed);`执行完后，执行`connect_completed`
+
+	- 主线程创建socket完毕，继续
+	- destruct = default， 这样会把数组中的socket删除，但stdout的fd没被重置回来，会导致跑完layout test后，log不知道打到哪里去的问题。
+stdin, stdout, and stderr are 0, 1,and 2
+
 logcat 过滤：
 adb logcat -c && adb logcat chromium:E *:S
 
