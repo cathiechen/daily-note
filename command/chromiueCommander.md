@@ -64,10 +64,12 @@ void showNodePath(const blink::Node* node) {
 }
 
 
-G(INFO) << "cclog GetParentOfFirstLineBox curr_child=" << curr_child;
+LOG(INFO) << "cclog GetParentOfFirstLineBox curr_child=" << curr_child;
 
 ```
 
+log打不出来怎么办？
+重启手机，因为log在跑layouttest的时候被重定向到某个不知名的角落了。。
 
 logcat 过滤：
 adb logcat -c && adb logcat chromium:E *:S
