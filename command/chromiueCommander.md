@@ -186,6 +186,9 @@ git cl issue 2299213003
 git diff > /big/cathie/autosize_td.diff
 git apply /big/cathie/autosize_td.diff
 
+修改本地log：
+git commit --amend
+
 
 ## Gtest跟su相关的修改：
 third_party/catapult/devil/devil/android/device_utils.py
