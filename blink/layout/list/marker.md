@@ -118,7 +118,7 @@ none的歧义问题：type和image都没设置，则两个都是none;否则，no
 介绍新的position架构，用于模拟css2.1中定义的list marker(outside)的定位行为。这个`position: marker`可以用于所有元素。可以让任何元素作为li的marker，不管css是否应用到，该元素的定位位置都跟native的marker是一样的。（这个定义可以使marker更多样化）
 
 #### 7.1 `position: marker`
-`marker`是否有效，取决于是否存在li祖先节点。若无li祖先节点，position值被设置成`relative`。 若有，`position: marker`当作*absolutely positioned*(所以，是自己有个computelogicalposition, 不用css计算，哇。。有待你激动)
+`marker`是否有效，取决于是否存在li祖先节点。若无li祖先节点，position值被设置成`relative`。 若有，`position: marker`当作*absolutely positioned*(所以，是自己有个computelogicalposition, 不用css计算，哇。。有点激动)
 
 如何定位，先解释以下terms：
 - ancestor list item(ALI): marker最近的li祖先节点
@@ -149,4 +149,24 @@ example： `position: marker`可以用于，只有marker的内容比较重要，
 - list-item: 默认值，以li的dir为准
 - list-container: 以li的父亲节点的dir为准。
 
+### 8. counter相关的没翻
 
+
+
+## [CSS2.2 lists翻译](https://www.w3.org/TR/CSS22/generate.html#listso)
+
+CSS2.2 为li的content创建一个主块，根据`list-style-typ`和`list-style-image`的值，会创建一个marker box，以显示这个element是li
+
+list属性描述li的基本样式：允许指定marker的type（image， glyph， number），以及指定marker相对于主块的位置(outside, inside), 不允许指定marker的样式和相对位置。
+
+background，只作用与主块，marker的是透明的。
+
+- `list-style-position`
+	- outside: marker-box在主块之外：
+		- 没有定义与float相邻的定位位置
+		- 没有定义marker box具体的位置，和paint order
+		- li dir：ltr，marker在左边；反之，右边
+		- marker box固定与主块的border，不随着主块内容滚动而滚动
+		- 若主块的overflow非visible，有可能导致marker无法显示（要改）
+		- marker box的大小和内容有可能影响主块或其第一个line box的高度。某些情况下，可能引起新行的创建
+	- inside: 作为主块的第一个line box，位于`::before`之前
