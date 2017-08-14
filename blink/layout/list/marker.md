@@ -45,3 +45,22 @@
   - absolute需要一个container，所以还是要（0,0,0,0）的relative container
   - 更新后不要管水平方向的位置变化，只要管垂直方向的，那line-height这个怎么算？
   - inside和outside互换的时候如何处理？
+
+## questions
+
+- 嵌套的`<li><ul><li></li></ul></li>`是否应换行？
+	- old: 换行
+	- firefox：不换行
+- 没有li作为父亲节点的marker怎么办？
+	- 若是通过`::marker`定义的marker，则跟relative一样
+	- 原来的方式没办法独立设置marker的
+- 如果li的孩子节点有负值的孩子，marker应该跟着偏移吗？还是与兄弟marker对齐
+	- old: 不偏移
+	- firefox: 不偏移
+- line-height很大的内容的marker应跟内容对齐
+	- old： 除了overflow和nested li，其它对齐
+	- firefox: 都对齐
+- 如果li的孩子内容是空的，是否该由marker支撑起高度
+	- old: 支撑
+	- firefox： 不支撑
+- inside 和 outside 切换

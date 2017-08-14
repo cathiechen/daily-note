@@ -26,3 +26,29 @@ line layout 一直以来是个盲区，最近顶着硕大的压力，终于看�
 - inlinebox, 基类，一般对应一段文字，
 	- inlineflowbox，一般对应inline元素，存在overflow
 		- rootinlinebox，对应一个block，包含换行信息和overflow
+
+
+## 各种is
+
+- `IsLayoutInline()`: `EDisplay::kInline:`, 跟display:inline相关，是一种layoutobject， `LayoutInline : LayoutBoxModelObject : public LayoutObject`
+	- `EDisplay::kInlineBlock` 具有这种display的元素不会被创建成LayoutInline，LayoutBlock instead:)
+- `IsInline()`: LayoutObject的一种属性
+	- `display == EDisplay::kInline`
+	- `IsDisplayReplacedType`
+```  
+  static bool IsDisplayReplacedType(EDisplay display) {
+    return display == EDisplay::kInlineBlock ||
+           display == EDisplay::kWebkitInlineBox ||
+           display == EDisplay::kInlineFlex ||
+           display == EDisplay::kInlineTable ||
+           display == EDisplay::kInlineGrid;
+  }
+```
+
+- 总结：`IsLayoutInline`就是inline是天生具有不换行的属性那种。`isInline`它本身可以是block但又不换行，具有inline的特性。
+
+
+## layout目录下的结构变化
+
+- api: 多了一个api文件夹，是layout对外的接口，也就是，document之类的不会直接调用layoutobject，只会调用layoutitem
+- line: inlineBox之类的, 跟line相关的操作，除了line内部调用，edit也会用到，什么nextleafchild之类的
