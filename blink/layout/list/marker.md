@@ -64,3 +64,89 @@
 	- old: 支撑
 	- firefox： 不支撑
 - inside 和 outside 切换
+
+
+
+## W3C翻译
+
+### 1.本文档介绍的内容： 
+- `::marker`
+- `list-item` 和 `inline-list-item`
+- `pisition: marker`
+- 一些控制marker的定位和style的属性
+- counter
+
+
+### 2. 声明一个list item
+List Item是display被设置成`list-item` 和 `inline-list-item`的元素。只有list item 自动生成`::marker`伪类元素，其它元素不会自动生成。
+
+另外，li的counter是默认增加的。除非通过`counter-increment`设置成递减1，否则，都是默认增加1的。
+
+新增`display: inline-list-item`: `inside`的li。除此之外，跟inline没差。
+
+
+### 3. 默认的marker内容：`list-style-image`和`list-style-type`属性
+marker的自动生成内容由这两个属性控制。如果没设置`list-style-image`或image不是一个有效值，内容由`list-style-type`控制。
+
+`list-style-style`可以设置成：conter-style|string|none.
+
+
+### 4. marker定位：`list-style-position`属性
+可以设置成： inside和outside，用于控制marker的位置。
+
+- inside：marker是*inline元素*，定位于`::before`前面
+- outside：把`position`的值加到marker上面。另外，marker的文字排版方向必需与“marker positioning reference element”一样
+
+若`display: inline-list-item`则是`inside`
+注意：只有marker的内容不是空的时候才会产生marker.
+
+
+### 5. `list-style` shorthand 属性
+三种属性一起设置：`list-style-type`，`list-type-position`和`list-style-image`
+none的歧义问题：type和image都没设置，则两个都是none;否则，none应用于设置了值之外的那个属性。
+
+### 6. markers: `::marker`伪类
+
+新增的伪类`::marker`, 由li生成，并作为其marker。
+`::marker`生成的是一个element，可以应用css。marker定位与`::before`的前面，默认是inline的。然而，`list-style-position`的一些特殊设置，可以让marker box变成positioned，这个会影响display属性
+这个伪类只能作用于li，其它的无效。
+
+#### 6.1. 生成内容的content属性
+`::marker`的内容由`list-style-type`和`list-style-image`决定
+
+### 7. 定位markers
+介绍新的position架构，用于模拟css2.1中定义的list marker(outside)的定位行为。这个`position: marker`可以用于所有元素。可以让任何元素作为li的marker，不管css是否应用到，该元素的定位位置都跟native的marker是一样的。（这个定义可以使marker更多样化）
+
+#### 7.1 `position: marker`
+`marker`是否有效，取决于是否存在li祖先节点。若无li祖先节点，position值被设置成`relative`。 若有，`position: marker`当作*absolutely positioned*(所以，是自己有个computelogicalposition, 不用css计算，哇。。有待你激动)
+
+如何定位，先解释以下terms：
+- ancestor list item(ALI): marker最近的li祖先节点
+- mark postioning reference element(MPRE): 
+	```
+	if (ALI's marker-side:list-item)
+	  MPRE = ALI;
+	else if (ALI's marker-side:list-container && ALI has parent)
+	  MPRE = ALI's parent;
+	else
+	  MPRE = ALI;
+	```
+- list item positioning edge(LIPE): ALI的开始排版的边缘与MPRE的一样，不管ALI的坐标是怎样的。
+- marker positioning edge(MPE): marker的外部边缘与ALI的相反，即：ALI的左边缘和marker的右边缘一样
+
+marker的block方向位置跟normal flow的element一样。
+inline方向上，marker的位置，必须保证，MPE和LIPE齐平。
+
+注意：这么绕的定义，是为了使marker和li齐平。然后让`marker-side:list-container`可以定义所有marker在li的同一边（即使li们可能有不同的`dir`），这样定义一遍的padding就可以把所有marker显示出来。基于这个实现，可以让`marker`, `li`和`container`有不同的`dir`的时候，看起来合理一点。
+
+一个li可以有多个marker，top, bottom, left, right可以设置他们的相对位置（跟relative一样）
+
+example： `position: marker`可以用于，只有marker的内容比较重要，而style不那么重要的环境
+
+#### 7.2 `marker-side`属性
+默认情况下，marker的位置是根据li的`dir`的。然后，若li们有不同的`dir`属性时，为了让所有marker都显示在li的同一边，此时，可以使用`marker-side`
+有两个值:
+- list-item: 默认值，以li的dir为准
+- list-container: 以li的父亲节点的dir为准。
+
+
