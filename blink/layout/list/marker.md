@@ -67,7 +67,7 @@
 
 
 
-## W3C翻译
+## [css-lists-3翻译](https://www.w3.org/TR/css-lists-3/)
 
 ### 1.本文档介绍的内容： 
 - `::marker`
