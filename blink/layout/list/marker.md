@@ -170,3 +170,34 @@ background，只作用与主块，marker的是透明的。
 		- 若主块的overflow非visible，有可能导致marker无法显示（要改）
 		- marker box的大小和内容有可能影响主块或其第一个line box的高度。某些情况下，可能引起新行的创建
 	- inside: 作为主块的第一个line box，位于`::before`之前
+
+
+## 确认方案
+1. 生成marker的时候，style是否确定？`inside->inline marker`; `outside->absolute marker`;
+2. absolute marker 需要重载container为li(MPRE), dir?一个static的containing block加上abs的孩子，会有问题嘛？有问题，根本无效。。所以，如果不自己创建container的话，只能让marker向上找container，并根据这个container的位置定位marker，相信我，很麻烦！不要问我怎么知道，我当然是写demo了，并没有把定位定好...如果自己创建container，那么是不是abs就无所谓了，可以是relative。
+3. 添加marker到layout tree：  inline marker添加到第一个line box的父亲节点中; absolute marker添加到li中
+4. after layout， absolute marker更新垂直方向的位置；inline marker更新水平方向的位置？不要
+5. 切换position时，需要删除marker，重新生成（或者更新style）
+6. painter需要修改嘛？
+7. 跟line box相关的函数要改嘛？
+8. line-height: 内容有line-height的情况， li自己有line-height的情况
+9. image marker?
+10. LayoutListItem要改，box, block?
+
+
+
+## 各种object
+
+- LayoutObject
+	- LayoutText
+	- *LayoutBoxModel*
+		- *LayoutInline*
+		- *LayoutBox*
+			- LayoutReplace
+			- *LayoutListMarker*
+			- LayoutBlock
+				- *LayoutBlockFlow*
+				- flex
+				- grid
+				- table
+				- scrollBar
