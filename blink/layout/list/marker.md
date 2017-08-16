@@ -174,7 +174,7 @@ background，只作用与主块，marker的是透明的。
 
 ## 确认方案
 1. 生成marker的时候，style是否确定？`inside->inline marker`; `outside->absolute marker`;
-2. absolute marker 需要重载container为li(MPRE), dir?一个static的containing block加上abs的孩子，会有问题嘛？有问题，根本无效。。所以，如果不自己创建container的话，只能让marker向上找container，并根据这个container的位置定位marker，相信我，很麻烦！不要问我怎么知道，我当然是写demo了，并没有把定位定好...如果自己创建container，那么是不是abs就无所谓了，可以是relative。
+2. absolute marker 需要重载container为li(MPRE), dir?一个static的containing block加上abs的孩子，会有问题嘛？有问题，根本无效。。所以，如果不自己创建container的话，只能让marker向上找container，并根据这个container的位置定位marker，相信我，很麻烦！不要问我怎么知道，我当然是写demo了，并没有把定位定好...如果自己创建container，那么是不是abs就无所谓了，可以是relative。哈哈，不要管container，因为如果没设置位置，直接用static的位置，需要的layoutlistmarker::layout里面调用一下updatelogicalwidth等即可。
 3. 添加marker到layout tree：  inline marker添加到第一个line box的父亲节点中; absolute marker添加到li中
 4. after layout， absolute marker更新垂直方向的位置；inline marker更新水平方向的位置？不要
 5. 切换position时，需要删除marker，重新生成（或者更新style）
