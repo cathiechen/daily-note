@@ -28,7 +28,7 @@
       - marker的InlineFlowBox，以及其parent，OverrideOverflowFromLogicalRects, 重新计算的layoutrect和visionrect.
       - block level, ParentBox(), 向上传递overflow rect
 - 总结：
-  -  创建一个inline的marker
+  - 创建一个inline的marker
   - 把marker加上layout tree，并更新marker的margin和content
   - computeoverflow（li也就是layout完所有孩子后），重新更正marker的水平位置
   - 这个方案是：把marker加入content flow里，省略了垂直位置的的计算，只要计算水平位置，但存在以下问题
