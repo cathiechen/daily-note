@@ -50,10 +50,23 @@ https://www.w3.org/TR/css-pseudo-4/#marker-pseudo
 		- 如何对齐？ 找到第一个text，marker偏移text的parent到li的偏移，在加上baseline的差异
 
 ## 需要修改的地方
-- 创建marker
-- add to layout tree
-- layout: static position, block方向对齐
-- listitemstyledidchange: 设置abs属性
-- 删除：li computeOverflow时的处理要删除。
-- 由于marker是继承box的，inside的话，setinline(true)就有inline属性了；outside：是abs，是否需要改成block的？
-- 很多重写的函数，需要添加outside的处理
+
+分两个阶段：
+
+### 阶段一
+- 添加或改变的地方：
+	- 创建marker, 删除inline设置
+	- listitemstyledidchange: outside: 设置abs属性,inline: false; inside: position:relative; inline:true
+	- updatemarkerlocation: ouside:add to li; inside: add to lineboxparent; list-type changed: remove marker, add marker.
+	- layout: outside:计算static position, block方向baseline对齐; inside: 没变化
+- 删除的地方：
+	- li computeOverflow时的水平方向对齐的处理要删除。
+- image的情况？
+	- 如果是image，就直接创建成layoutimage好了，然后根据不同的type，设置image的position。
+
+### 阶段二
+
+由于marker是继承box的，inside的话，setinline(true)就有inline属性了；outside：是abs，是否需要改成block的？
+- listmarker根据type的不同，创建出不同的layoutobject: layoutinline；layoutblock;
+- 可以删除很多重载的函数，只要保留marker内容相关的函数。
+
