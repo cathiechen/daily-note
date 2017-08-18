@@ -28,7 +28,7 @@ background，只作用与主块，marker的是透明的。
   - li dir：ltr，marker在左边；反之，右边
   - marker box固定与主块的border，不随着主块内容滚动而滚动
   - 若主块的overflow非visible，有可能导致marker无法显示（要改）
-    - marker box的大小和内容有可能影响主块或其第一个line box的高度。某些情况下，可能引起新行的创建
+  - marker box的大小和内容有可能影响主块或其第一个line box的高度。某些情况下，可能引起新行的创建
   - inside: 作为主块的第一个line box，位于`::before`之前
 
 虽然没有规定marker box的位置，及显示，但从最新的草案中可以看到，以后的趋势是让任何一个element都可以成为marker。
