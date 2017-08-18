@@ -58,7 +58,7 @@ https://www.w3.org/TR/css-pseudo-4/#marker-pseudo
 	- 创建marker, 删除inline设置
 	- listitemstyledidchange: outside: 设置abs属性,inline: false; inside: position:relative; inline:true
 	- updatemarkerlocation: ouside:add to li; inside: add to lineboxparent; list-type changed: remove marker, add marker.
-	- layout: outside:计算static position, block方向baseline对齐; inside: 没变化
+	- layout: outside:计算static position, block方向baseline对齐; inside: 没变化; image和text的对齐方式
 - 删除的地方：
 	- li computeOverflow时的水平方向对齐的处理要删除。
 - image的情况？
