@@ -1,5 +1,5 @@
 ## Objective
-This document aims to discuss the refactor list marker. And its the follow-up of the discuss in https://chromium-review.googlesource.com/c/605157.
+This document aims to discuss the refactor list marker. And it's the follow-up of the discuss in https://chromium-review.googlesource.com/c/605157.
 
 ## Current status
 
