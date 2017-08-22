@@ -9,15 +9,15 @@
 
 ## 现有方案
 
-- `ListMarker`都是inline的
+- `ListMarker`都是inline的replace. 不是个block，是个box，没有孩子，自己直接是内容
 - `LayoutListItem::SubtreeDidChange()`时，调用`LayoutListItem::UpdateMarkerLocation()`;
   - 确定`line_box_parent`
     - 第一个line_box的父亲节点
     - `<li>`
   - remove marker from 之前的节点
   - `line_box_parent->AddChild(marker_, FirstNonMarkerChild(line_box_parent))`
-  - `marker_->UpdateMarginsAndContent();`更新marker的content和margin(偏移设置在margin里面)
-    - `LayoutListMarker`的layout
+  - `marker_->UpdateMarginsAndContent();`更新marker的content和margin(偏移设置在margin里面), 设置margin导致，box向左（ltr）偏移，marker偏移量是preferwidth + padding.
+    - `LayoutListMarker`的layout，没有走box的的layout，直接自己设置宽高和margin
   - 除了计算宽高，还有计算一个值： `line_offset_`
   - `line_offset_`: `ListItem()->LogicalLeftOffsetForLine(block_offset, kDoNotIndentText, LayoutUnit());`= float object宽度 + `TextIndentOffset()`
 - 在`LayoutBlockFlow::UpdateBlockLayout()`时，最后会`ComputeOverflow(unconstrained_client_after_edge);`
