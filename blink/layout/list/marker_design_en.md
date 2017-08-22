@@ -20,7 +20,7 @@ The new resolution make outside marker absolute positioned. And adjust marker to
     - outside marker need to `ComputeInlineStaticDistance()` and `ComputeBlockStaticDistance()`, get the static position.
     - position marker:
       - inline direct: margin, float, indent...
-      - block direction: position marker baseline flush against first line box baseline.
+      - block direction: position marker baseline flush against first line box baseline. Marker is a replaced box not a block, we couldn't position it by `line-height` or `vertical-align`.
   - overflow rect: `LayoutListItem::PositionListMarker()` could be removed, because outside marker is absolute positioned and has adjusted inline direct.
 
 ## Resolution 2
