@@ -12,28 +12,41 @@ This will make marker effect the height of `<li>` and generate unecessary line-b
 
 According to [latest working draft](https://www.w3.org/TR/css-lists-3/#position-marker), markers counts as absolutely positioned. 
 
-## New Resolution
+## Resolution 1
 
-The new resolution make outside marker absolute positioned. And adjust marker to right position based on its static position.
-- Changes:
-  - `ListItemStyleDidChange()`: set `postion: absolute` to outside marker; set `position: relative` to inside marker.
-  - `LayoutListItem::UpdateMarkerLocation()`: add marker to `GetParentOfFirstLineBox`
-  - `LayoutListMarker::UpdateLayout()`: 
-    - outside marker need to `ComputeInlineStaticDistance()` and `ComputeBlockStaticDistance()`, get the static position.
-    - position marker:
-      - inline direction: margin, float, indent...
-      - block direction: position marker baseline flush against first line box baseline. Marker is a replaced box not a block, we couldn't position it by `line-height` or `vertical-align`.
-  - overflow rect: `LayoutListItem::PositionListMarker()` could be removed, because outside marker is absolute positioned and has adjusted inline direct.
+In this resolution, we make outside marker absolutely positioned and don't change the layout tree position of marker. Then adjust marker to right position based on its static position.
+
+Changes required:
+- `ListItemStyleDidChange()`: set `postion: absolute` to outside marker; set `position: relative` to inside marker.
+- `LayoutListItem::UpdateMarkerLocation()`: add marker to `GetParentOfFirstLineBox`
+- `LayoutListMarker::UpdateLayout()`: 
+  - outside marker need to `ComputeInlineStaticDistance()` and `ComputeBlockStaticDistance()`, get the static position.
+  - position marker:
+    - inline direction: margin, float, indent...
+    - block direction: position marker baseline flush against first line box baseline. Marker is a replaced box not a block, we couldn't position it by `line-height` or `vertical-align`.
+- overflow rect: `LayoutListItem::PositionListMarker()` could be removed, because outside marker is absolute positioned and has adjusted inline direction.
 
 ## Resolution 2
-This resolution add outside marker into `<li>` instead of `<li>`'s `GetParentOfFirstLineBox`. This would reduce position adjust in inline director.
+#### Outside marker :
 
-- changes require:
-  - `ListItemStyleDidChange()`:`postion: absolute` to outside marker; set `position: relative` to inside marker. 
-  - `LayoutListItem::UpdateMarkerLocation()`: make outside marker as a child of `<li>`, If `list-style-position` changed, make sure marker removed from old postion: `marker_->Remove()`
-  - `LayoutListMarker::UpdateLayout()`:
-    - compute static position of marker
-    - position marker baseline flush against first line box baseline.
-  - overflow rect: this could be removed too.
+In this resolution we set outside marker absolutely position, and add outside marker as the direct child of `<li>`. As the container of marker is uncertain, we need to compute the static position of marker. As marker is the direct child of `<li>`, it could reduce position adjust in inline direction. As marker is absolutely positioned, add overflow rect from marker could be removed too.
 
+#### Inside marker :
+
+Make position of inside marker relative. Add inside marker to `GetParentOfFirstLineBox`, with no position adjust. If it's has different text direct to `<li>`, it should add as direct child of `<li>`, and position adjust is needed. If an anonymous block is created as marker's parent, make this anonymous block inline.
+
+#### Here are the changes required:
+
+- `ListItemStyleDidChange()`: Set `postion: absolute` to outside marker; set `position: relative` to inside marker. 
+- `LayoutListItem::UpdateMarkerLocation()`: 
+  - outside marker: Make outside marker as first child of `<li>`. 
+  - Inside marker: Make inside marker as first child of `GetParentOfFirstLineBox`. If its text direct is different to `li`, add inside marker as first child of `<li>`. If an anonymous block is created as marker's parent, make this anonymous block inline.
+  - `list-style-position` changed: If `list-style-position` changed, make sure marker removed from old position: `marker_->Remove()` and add it to the right position.
+- `LayoutListMarker::UpdateLayout()`:
+  - Outside marker:
+    - Compute static position of marker.
+    - Position marker baseline flush against `<li>` content's first line box baseline.
+  - Inside marker:
+    - If the text direct the different, marker as the first child of `<li>` needed to adjust its position, make sure it's positioned flush against content, similar to outside marker. 
+- overflow rect: `LayoutListItem::PositionListMarker()` could be removed, because outside marker is absolute positioned and adjusting inline direction position is no need.
 
