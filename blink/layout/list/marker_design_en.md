@@ -12,24 +12,10 @@ This will make marker effect the height of `<li>` and generate unnecessary line-
 
 According to [the latest working draft](https://www.w3.org/TR/css-lists-3/#position-marker), markers counts as absolutely positioned. 
 
-## Resolution 1
-
-In this resolution, we make outside marker absolutely positioned and don't change the layout tree position of marker. Then adjust marker to right position based on its static position.
-
-Changes required:
-- `ListItemStyleDidChange()`: set `postion: absolute` to outside marker; set `position: relative` to inside marker.
-- `LayoutListItem::UpdateMarkerLocation()`: add marker to `GetParentOfFirstLineBox`
-- `LayoutListMarker::UpdateLayout()`: 
-  - outside marker need to `ComputeInlineStaticDistance()` and `ComputeBlockStaticDistance()`, get the static position.
-  - position marker:
-    - inline direction: margin, float, indent...
-    - block direction: position marker baseline flush against first line box baseline. Marker is a replaced box not a block, we couldn't position it by `line-height` or `vertical-align`.
-- overflow rect: `LayoutListItem::PositionListMarker()` could be removed, because outside marker is absolute positioned and has adjusted inline direction.
-
-## Resolution
+## Solution
 #### Outside marker :
 
-In this resolution we set outside marker absolutely position, and add outside marker as the child of `<li>`. As the container of marker is uncertain, we need to compute the static position of marker. As marker is the child of `<li>`, it could reduce position adjust in inline direction. As marker is absolutely positioned, add overflow rect from marker could be removed too.
+In this solution we set outside marker absolutely position, and add outside marker as the child of `<li>`. As the container of marker is uncertain, we need to compute the static position of marker. As marker is the child of `<li>`, it could reduce position adjust in inline direction. As marker is absolutely positioned, add overflow rect from marker could be removed too.
 
 #### Inside marker :
 
