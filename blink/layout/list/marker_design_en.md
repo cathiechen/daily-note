@@ -1,6 +1,6 @@
 # List Marker Position Refactor
 ## Objective
-This document aims to discuss the refactor list marker position. And this is the follow-up of discuss in https://chromium-review.googlesource.com/c/605157.
+This document aims to discuss the refactor list marker position. And this is the follow-up of discuss in [issue 605157](https://chromium-review.googlesource.com/c/605157).
 
 ## Current status
 
@@ -22,7 +22,7 @@ In this solution we set outside marker absolutely position, and add outside mark
 
 Make position of inside marker relative. Add inside marker to `GetParentOfFirstLineBox`, with no position adjust. If it's has different text direction to `<li>`, it should add as child of `<li>`. In this case, if `<li>` has block child, there will be a line-break between marker and content.
 
-#### Here are the changes required:
+#### Changes required:
 
 - `ListItemStyleDidChange()`: Set `position: absolute` to outside marker; set `position: relative` to inside marker. 
 - `LayoutListItem::UpdateMarkerLocation()`: 
