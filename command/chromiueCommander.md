@@ -23,7 +23,9 @@ ninja -C out/Release content_shell_apk
 build/android/adb_install_apk.py out/Release/apks/ContentShell.apk
 
 ## gdb:
-build/android/adb_gdb_content_shell --output-directory="out/Release"  --sandboxed=13 --su-prefix="su -c"
+- build/android/adb_gdb_content_shell --output-directory="out/Release"  --sandboxed=13 --su-prefix="su -c"
+- build/android/adb_gdb_content_shell --output-directory="out/Debug"  --start --su-prefix="su -c"  --verbose
+- 如果不能跑，试试把contentshell的debuggable设置成true。
 
 ## how to log outside webkit?
 
