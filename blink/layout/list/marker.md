@@ -201,3 +201,33 @@ background，只作用与主块，marker的是透明的。
 				- grid
 				- table
 				- scrollBar
+
+## list marker container的问题
+
+1. 先来考虑是否必要吧。
+一开始不想要container，直接让marker用自己的static position。但后面遇到text-align: right的问题，即：static position是不确定的，会被css改变。而且不确定的container让人很不安。
+
+2. 创建container的问题
+首先inside marker是不需要的，只有outside marker需要container。在outside和inside切换时，尤其要小心。所以，具体方法就是，把container保存的list item中：
+	- 创建： 在list item的styledidchange中，确定是outside marker，才创建
+	- destroy：在list item销毁之前销毁
+	- 当marker是新建的outside时，把marker加到container，并把container加入list item
+	- 当marker是新建的inside时，不会创建container，直接加入list item
+	- 当marker从outside变成inside时， 把container从layout tree上remove掉，然后marker直接加入list item
+	- 当marker从inside变成outside时， 如果没有container创建container，然后marker加入container，然后container加入list item
+
+3. container的css property
+	- display: block
+	- position: relative. 因为它是一个absolute的container。
+	- height: 0px. 为了不影响list item的内容
+
+4. 如果有了container，outside marker是否没必要absolute
+不行啊，如果不是absolute的，那么marker将可以被float入侵，导致偏移。
+
+5. containingblock不能是anonymous的问题
+containingblock不能是anonymous的理由是： anonymous可能随时被合并。但marker container不存在这样的问题啊，它和marker都随着list item一起destroy。所以不存在marker还在，container就被删除的风险。
+
+以上！
+
+
+
