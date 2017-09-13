@@ -17,6 +17,12 @@ line layout 一直以来是个盲区，最近顶着硕大的压力，终于看�
 			- computeinlinedirectionpositionforline，水平方向
 			- computeblockdirectionpositionforline，垂直方向
 			- computeoverflow
+	- 流程：
+		- 所有的bidi都保存在一个叫resolver的地方
+		- 确定这个line开始的bidi，利用linebreaker确定endline。把这些bidi runs 保存在bidiruns中
+		- 创建一个rootinlinebox，代表一个line。每个 bidi run 对应一个linebox，对这些line boxes进行水平和垂直对齐。在垂直排版时，lineheight会影响到line的高度，具体见：rootinlinebox::ascentanddescentforbox.
+		- 排版完后，clear bidiruns。
+		- 获取下一行的bidiruns。重复
 
 这样就排好一行了，如果还有下一行，继续，分行+layout
 

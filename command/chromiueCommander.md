@@ -98,7 +98,7 @@ log打不出来怎么办？
 stdin, stdout, and stderr are 0, 1,and 2
 
 logcat 过滤：
-adb logcat -c && adb logcat chromium:E *:S
+`adb logcat -c && adb logcat chromium:E *:S`
 
 
 ## how to set contentshell debuggable?
@@ -115,49 +115,31 @@ adb logcat -c && adb logcat chromium:E *:S
                    android:launchMode="singleTask"
 
 ## 跑layouttest:
+
+结果所处位置：src/out/Debug/layout-test-results
+
+
 python third_party/WebKit/Tools/Scripts/run-webkit-tests fast/text-autosizing  -t Default --android --no-pixel-tests
 
 出现permission deny问题的改法：
 如果有问题，先改这个文件试试，所有的命令都加上su -c
 --- a/third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/android.py
 +++ b/third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/android.py
-@@ -729,31 +729,31 @@ class ChromiumAndroidDriver(driver.Driver):
-         # Required by webkit_support::GetWebKitRootDirFilePath().
-         # Other directories will be created automatically by adb push.
-         self._device.RunShellCommand(
--            ['mkdir', '-p', DEVICE_SOURCE_ROOT_DIR + 'chrome'],
-+            ['su', '-c', 'mkdir', '-p', DEVICE_SOURCE_ROOT_DIR + 'chrome'],
-             check_return=True)
- 
-         # Allow the test driver to get full read and write access to the directory on the device,
-         # as well as for the FIFOs. We'll need a world writable directory.
-         self._device.RunShellCommand(
--            ['mkdir', '-p', self._driver_details.device_directory()],
-+            ['su', '-c', 'mkdir', '-p', self._driver_details.device_directory()],
-             check_return=True)
- 
-         # Make sure that the disk cache on the device resets to a clean state.
-         self._device.RunShellCommand(
--            ['rm', '-rf', self._driver_details.device_cache_directory()],
-+            ['su', '-c', 'rm', '-rf', self._driver_details.device_cache_directory()],
-             check_return=True)
- 
-         self._push_data_if_needed(log_callback)
- 
-         self._device.RunShellCommand(
--            ['mkdir', '-p', self._driver_details.device_fifo_directory()],
-+            ['su', '-c', 'mkdir', '-p', self._driver_details.device_fifo_directory()],
-             check_return=True)
- 
-         self._device.RunShellCommand(
--            ['chmod', '-R', '777', self._driver_details.device_directory()],
-+            ['su', '-c', 'chmod', '-R', '777', self._driver_details.device_directory()],
-             check_return=True)
          self._device.RunShellCommand(
 -            ['chmod', '-R', '777', self._driver_details.device_fifo_directory()],
 +            ['su', '-c', 'chmod', '-R', '777', self._driver_details.device_fifo_directory()],
              check_return=True)
 
+改变server的路径,确保相应目录上有对应的test case
+--- a/third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/driver.py
++++ b/third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/driver.py
+@@ -262,7 +262,8 @@ class Driver(object):
+ 
+         if '/https/' in test_name or '.https.' in test_name:
+             return 'https://%s:%d/%s' % (hostname, secure_port, relative_path)
+-        return 'http://%s:%d/%s' % (hostname, insecure_port, relative_path)
++               #return 'http://%s:%d/%s' % (hostname, insecure_port, relative_path)
++        return 'http://res.imtt.qq.com/qqbrowser_x5/cathiechen/LayoutTests/%s' % (hostname, insecure_port, relative_path)
 
 
 

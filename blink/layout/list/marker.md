@@ -230,4 +230,69 @@ containingblock不能是anonymous的理由是： anonymous可能随时被合并�
 以上！
 
 
+## 修改
+
+1. marker container is anonymous,对containingBlock的影响
+2. marker container相关修改
+	- 创建
+	- 销毁
+	- 如何添加到layout tree
+3. marker的css属性设置（absolute， static）
+4. marker的layout处理
+5. list item computeoverflow时，需要处理marker的位置。因为marker的layout跑到了content前面，所有没法在marker layout时，对齐其和content的baseline！！！
+6. 好多crash:( 而且面对float入侵，和以前的表现不同。 啊！要疯了！！
+
+
+## 对文字排版有影响的CSS属性
+- direction: ltr|rtl， rtl会导致有些文字从右到左，其中标点符号一定会在最左。(只有direction会影响marker是出现在哪边)
+- text-align: right，文字的顺序不会变化，但还会整体右移。
+- vertical-align: baseline|top|bottom等，是当前元素和父元素的对齐方式
+- writing-mode: vertical-lr，控制文字是否垂直排版，以及文字的排版方向
+
+
+## 修改2
+
+1. inline marker parent, 确保marker的static位置和之前的一样
+2. 与container相似，在list item中： 创建，销毁，添加到layout tree（marker加到parent，parent加到inline里面）
+3. marker属性设置：absolute
+4. marker layout时处理，计算static位置,计算偏移位置（abs的layout在普通元素之后）
+
+存在的问题：
+1. crash
+加container的方案都有这个问题，原因是释放了两遍：1. parent node释放 2.li 释放。解决方法：parent时不让释放
+
+2. 显示不了marker
+原因是container的width以及overflow rect算出来的宽度都是0. width是0正常。 overflow rect不该是0, 移植positionmarkerposition到addoverflowfromchild后，可以显示.从这里，也可以看出overflow rect的作用。
+
+3. 如果first line box的位置发生变化，container的位置将不会被更新，好蛋疼！shit，这个可以否定掉所有absolute的方案...
+
+## 目前试过的方案
+方案的主要区别在于marker添加的位置
+
+- relative container
+	- 建一个relative的container，把marker设置成abs并加到container， container加到li下面。
+	- 然后再水平对齐，从左边float等情况的处理
+	- 垂直对齐，找到firstlinebox，并对齐
+- inline container
+	- 创建一个inline的container，把marker设置成abs并加到container，container加到first line box的前面，减少垂直对齐的工作量
+	- 水平对齐：从右边float等情况处理，现成代码可以参考
+	- 垂直对齐：从firstlinebox的底部开始对齐
+- 直接插入abs的marker
+	- 直接插入abs的marker到firstlinebox的前面
+	- 水平对齐：从右边float等情况处理，现成代码可以参考
+	- 垂直对齐：从parent的(0，0)位置开始对齐，lineheight等情况需要处理
+- 创建abs container + static marker（感觉这个方法最好）
+	- abs container 加到firstlinebox前面，copy li的positionlistmarker到container的addoverflowfromchild，可以正常显示。container的style继承parent还是li的问题待解决。（几乎快要成功了，但是firstlinebox位置变化的问题无法解决）
+	- 水平对齐，用现成的
+	- 原来不用container是有道理的，container css的继承问题很混乱。
+
+啊啊啊，心好累，单纯用css无法解决li的问题！
+
+尝试让marker作为一个layout被当成static，paint被当成abs的obj的方法。
+
+其实，最开始的那个方案是应该是可以的：
+- marker直接加到li，如果创建了anonymous block，设置其高度为0.（这样可以不影响content的垂直位置）
+- 对齐marker的linebox和content的第一个linebox的baseline(可以复用positionlistmarker的代码)
+- 这样位置变化的问题，就可以解决了。因为对齐用的是之前的方案，那么位置应该也可以保证一致。
+- vertical-align的问题，baseline， top，bottom
 
