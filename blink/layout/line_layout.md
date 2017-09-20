@@ -58,3 +58,50 @@ line layout 一直以来是个盲区，最近顶着硕大的压力，终于看�
 
 - api: 多了一个api文件夹，是layout对外的接口，也就是，document之类的不会直接调用layoutobject，只会调用layoutitem
 - line: inlineBox之类的, 跟line相关的操作，除了line内部调用，edit也会用到，什么nextleafchild之类的
+
+
+## alwaysRequiresLineBox
+
+```
+<html>
+<head>
+    <style>
+        .generate:before {content: 'before';}
+        ul {border: 1px green solid;}
+        span {border: 1px red solid;}
+
+    </style>
+</head>
+<body><div><span><div>item</div></span></div></body>
+</html>
+```
+
+layout tree:
+
+- layoutBlock
+	- anonymousBlock1
+		- first part of span1
+	- anonymousblock2
+		- div
+	- anonymousblock3
+		- second part of span2
+在实现list marker的过程中，遇到一个奇怪的问题，上面那个例子，如果span存在border，则会多出两个带border的行，总共显示3行; 若没设置border，则没用空白行，总共显示1行！所以，特地调查了一下。
+
+原因是：在nextLineBreak过程中，有个检验requiresLineBox的逻辑，由于span1是一个没有孩子节点的inline，所以通过校验其是否需要创建linebox来决定是否找到了linebreaker。alwaysRequiresLineBox 验证inline是否有pandding或border，margin，若有返回true；若没有，返回false。对于不需要创建的linebox的元素，会导致linebreak找不到下个linebreak的元素，这样就不会由后面的创建linebox，rootinlinebox，并layout这些linebox。具体调用堆栈如下：
+
+```
+>       minichrome.exe!blink::LayoutBoxModelObject::hasInlineDirectionBordersPaddingOrMargin() 行 176   C++
+        minichrome.exe!blink::alwaysRequiresLineBox(blink::LayoutObject * flow) 行 193  C++
+        minichrome.exe!blink::requiresLineBox(const blink::InlineIterator & it, const blink::LineInfo & lineInfo, blink::WhitespacePosition whitespacePosition) 行 201  C++
+        minichrome.exe!blink::LineBreaker::skipLeadingWhitespace(blink::BidiResolver<blink::InlineIterator,blink::BidiRun> & resolver, blink::LineInfo & lineInfo, blink::FloatingObject * lastFloatFromPreviousLine, blink::LineWidth & width) 行 33   C++
+        minichrome.exe!blink::LineBreaker::nextLineBreak(blink::BidiResolver<blink::InlineIterator,blink::BidiRun> & resolver, blink::LineInfo & lineInfo, blink::LayoutTextInfo & layoutTextInfo, blink::FloatingObject * lastFloatFromPreviousLine, WTF::Vector<blink::WordMeasurement,64,WTF::DefaultAllocator> & wordMeasurements) 行 70    C++
+        minichrome.exe!blink::LayoutBlockFlow::layoutRunsAndFloatsInRange(blink::LineLayoutState & layoutState, blink::BidiResolver<blink::InlineIterator,blink::BidiRun> & resolver, const blink::InlineIterator & cleanLineStart, const blink::BidiStatus & cleanLineBidiStatus) 行 812       C++
+
+```
+为存在border的span创建linebox
+```
+>	minichrome.exe!blink::BreakingContext::handleEmptyInline() 行 450	C++
+ 	minichrome.exe!blink::LineBreaker::nextLineBreak(blink::BidiResolver<blink::InlineIterator,blink::BidiRun> & resolver, blink::LineInfo & lineInfo, blink::LayoutTextInfo & layoutTextInfo, blink::FloatingObject * lastFloatFromPreviousLine, WTF::Vector<blink::WordMeasurement,64,WTF::DefaultAllocator> & wordMeasurements) 行 84	C++
+ 	minichrome.exe!blink::LayoutBlockFlow::layoutRunsAndFloatsInRange(blink::LineLayoutState & layoutState, blink::BidiResolver<blink::InlineIterator,blink::BidiRun> & resolver, const blink::InlineIterator & cleanLineStart, const blink::BidiStatus & cleanLineBidiStatus) 行 812	C++
+```
+
