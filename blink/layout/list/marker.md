@@ -296,3 +296,42 @@ containingblock不能是anonymous的理由是： anonymous可能随时被合并�
 - 这样位置变化的问题，就可以解决了。因为对齐用的是之前的方案，那么位置应该也可以保证一致。
 - vertical-align的问题，baseline， top，bottom
 
+添加invisible marker：
+- 创建、删除、remove，更新内容等，和`marker_`差不多
+- 设置invisible marker的visibility:hidden
+
+markers add的位置：
+- invisible marker加到原来的位置,invisible marker要在marker之前添加，因为marker加完后有可能影响layout tree导致`line_box_parent`被删除。
+- marker尽量加成li的第一个孩子
+
+list的第一个孩子是匿名块的问题：
+- 匿名块有自己的内容：visible marker会被加到`<ab>`里面，所以此时marker不该设置自己的parent为（0,0），只有自己是anonymousblock唯一孩子时，才可以把ab设置成（0,0）
+```
+<li>
+  <ab>
+    <marker></marker>
+    <span>anonymous block content<span>
+  </ab>
+  <div>another block</div>
+</li>
+```
+- 匿名块没有自己的内容，若把marker加到该ab里面，将会导致新生一行，影响排版。所以改成把marker加到firstlinebox的li的下一级且匿名的祖先节点中。
+```
+<li>
+  <ab>
+    <span>
+  </ab>
+  <ab>
+    <ab><marker></marker></ab>
+    <div>another block</div>
+  </ab>
+  <ab>
+    </span>
+  </ab>
+</li>
+```
+
+把marker移动到invisible marker的位置。
+- 若没有invisible marker，走原来调整位置且计算overflow的逻辑
+- 存在invisible marker，先计算invisible marker的位置，移动marker的位置到invisible marker，计算marker的overflow，若不计算overflow将显示不了。
+
