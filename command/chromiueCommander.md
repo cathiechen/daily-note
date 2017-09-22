@@ -129,6 +129,7 @@ python third_party/WebKit/Tools/Scripts/run-webkit-tests fast/text-autosizing  -
 -            ['chmod', '-R', '777', self._driver_details.device_fifo_directory()],
 +            ['su', '-c', 'chmod', '-R', '777', self._driver_details.device_fifo_directory()],
              check_return=True)
+试试这个替换指令:) :%s/_device.RunShellCommand(.\+\[/_device.RunShellCommand(\['su', '-c', /gc
 
 改变server的路径,确保相应目录上有对应的test case
 --- a/third_party/WebKit/Tools/Scripts/webkitpy/layout_tests/port/driver.py
