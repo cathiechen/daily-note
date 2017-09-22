@@ -335,3 +335,5 @@ list的第一个孩子是匿名块的问题：
 - 若没有invisible marker，走原来调整位置且计算overflow的逻辑
 - 存在invisible marker，先计算invisible marker的位置，移动marker的位置到invisible marker，计算marker的overflow，若不计算overflow将显示不了。
 
+添加到list item下面的marker会导致margin collapse的中断
+- 把marker的anonymous parent当成position之类的节点，不影响margin collapse的传递
