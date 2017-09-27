@@ -337,3 +337,4 @@ list的第一个孩子是匿名块的问题：
 
 添加到list item下面的marker会导致margin collapse的中断
 - 把marker的anonymous parent当成position之类的节点，不影响margin collapse的传递
+- layout 第一个孩子之后`margin_info.SetAtBeforeSideOfBlock(false);`，但marker不应该影响下一个孩子的margin，所以在这里skip掉这个设置。
