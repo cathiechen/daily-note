@@ -338,3 +338,15 @@ list的第一个孩子是匿名块的问题：
 添加到list item下面的marker会导致margin collapse的中断
 - 把marker的anonymous parent当成position之类的节点，不影响margin collapse的传递
 - layout 第一个孩子之后`margin_info.SetAtBeforeSideOfBlock(false);`，但marker不应该影响下一个孩子的margin，所以在这里skip掉这个设置。
+
+list marker 与 autosizer的问题
+- 存在两个marker，一个放大，一个没有放大，导致对不齐的问题。
+
+
+
+
+## single marker
+1. emptyinlinebox  现在的处理方式是把marker加到里面那个div里面，但还有问题，如果里面div的overflow：hidden，那marker又显示不出来了。可能要从匿名块合并入手。
+```
+<li> <span> </span> <div>item</div></li>
+```
