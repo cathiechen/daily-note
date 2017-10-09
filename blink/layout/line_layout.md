@@ -105,3 +105,30 @@ layout tree:
  	minichrome.exe!blink::LayoutBlockFlow::layoutRunsAndFloatsInRange(blink::LineLayoutState & layoutState, blink::BidiResolver<blink::InlineIterator,blink::BidiRun> & resolver, const blink::InlineIterator & cleanLineStart, const blink::BidiStatus & cleanLineBidiStatus) 行 812	C++
 ```
 
+
+## AlignBoxInBlockDirection
+
+这里是垂直方向上排版inlinebox的
+
+- ComputeLogicalBoxHeight，作用是递归计算所有inlinebox的ascent、descent等，还要计算出max相关值
+	- 第一步，`RootInlineBox::VerticalPositionForBox`：计算inlinebox和rootinlinebox的baseline之间的距离，并把这个距离设置为inlinebox的logicalTop
+	- 第二步，`RootInlineBox::AscentAndDescentForBox`：计算每个inlinebox的ascent和descent。ascent + descent = lineheight.
+		- inlinebox字体的ascent、descent是怎样算出来的？fontdata里有个叫fontmetrics的类，它可以计算出这个字体的ascent, height和linespacing。linespacing比fontmetric的height要大一点，包含一行中字体上下的空隙。ascent = 上面空隙 + fontmetrics.ascent. descent =  linespacing - ascent. rootinlinebox的baselinetype会影响到ascent。
+		- 如果inlinebox的元素不是text，那么ascent=box->baseline; descent=lineheight - ascent. 所以，marker作为一个inline，它的ascent就是baseline。
+	- 第三步，计算maxPositionTop，maxPositionBottom, maxAscent, maxDescent等
+	- 递归对其孩子进行以上计算
+- `InlineFlowBox::PlaceBoxesInBlockDirection`
+	- 设置rootinlinebox的 logicalTop为“blockflow的top” + maxAscent - fontMetric.Ascent. 如果孩子inlinebox的lineheight和baseline与rootinlinebox相同，则，设置其logicalTop未这个高度。
+	- 根据verticalAlign设置各个inlinebox的logicalTop：
+		- 如果inlinebox的lineheight和baseline与rootinlinebox相同，则设置inlinebox的logicalTop为rootinlinebox的logicaltop。(marker就可以走这个流程)
+		- 如果verticalAlign：top，inlinebox的logicalTop设置为：“blockflow的top” 
+		- bottom，设置为：top + maxHeight - curr->lineHeight;
+		- 其他，设置为：top + maxAscent + curr->logicaltop() - curr->baseline(), 这里其实跟rootinlinebox是一样的，cur->logicalTop就是第一步设置的basline之间的距离
+	- 计算newLogicalTop
+		- 文字，或inlineflow：调整一下inlinebox的logicaltop，`new_logical_top += curr->BaselinePosition(baseline_type) - font_metrics.Ascent(baseline_type);`，在上一步中logcaltop = top + maxAscent + curr->logicaltop() - curr->baseline()，所以经过调整后，new_logical_top = top + maxAscent + curr->logicaltop() - fontMetrics.Ascent()。最后，再减去border和padding
+		- br，new_logical_top += marginTop
+	- 递归计算孩子节点
+	- 处理lineTop和lineBottom
+- 设置lineTop和lineBottom
+- 修改top为 top+=maxHeight
+- 完成

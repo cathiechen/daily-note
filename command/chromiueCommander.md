@@ -214,3 +214,5 @@ BlockPainter::intersectsPaintRect
 - `adb shell am start -n org.chromium.content_shell_apk/.ContentShellActivity -es --v=1`
 - ` adb shell 'echo "chrome --enable-logging --v=1" > /data/local/tmp/content-shell-command-line'` 然后在跑content-shell
 
+
+

@@ -350,3 +350,7 @@ list marker 与 autosizer的问题
 ```
 <li> <span> </span> <div>item</div></li>
 ```
+- 解决方案，判断li包含的是block节点的话，就直接自己创建一个高度为0的匿名块，把marker加到匿名块中，在把匿名块加到li，这样就不会出现匿名块合并导致的问题了。
+
+2. 对齐的问题。
+- rootinlinebox不会保存行内的信息的，但会保留一个logicaltop=top + maxAscent - fontMetrics.Ascent(). 所以，可以利用这个logicaltop计算出top + maxAscent - marker.baseline. 所以，公式是：logicaltop + fontMetrics.Ascent() - marker.baseline(). 目前看来可以。
