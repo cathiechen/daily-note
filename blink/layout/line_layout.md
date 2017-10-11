@@ -108,7 +108,7 @@ layout tree:
 
 ## AlignBoxInBlockDirection
 
-这里是垂直方向上排版inlinebox的
+这里是垂直方向上排版inlinebox的。以前一直以为rootinlinebox是inlinebox的parent，inlinebox的定位是基于rootinlinebox的logicalTop的。但事实上并不是这样，rootinlinebox并不会拥有任何inlinebox，它只是负责排版inlineboxes。
 
 - ComputeLogicalBoxHeight，作用是递归计算所有inlinebox的ascent、descent等，还要计算出max相关值
 	- 第一步，`RootInlineBox::VerticalPositionForBox`：计算inlinebox和rootinlinebox的baseline之间的距离，并把这个距离设置为inlinebox的logicalTop
