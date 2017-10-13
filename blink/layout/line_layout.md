@@ -132,3 +132,6 @@ layout tree:
 - 设置lineTop和lineBottom
 - 修改top为 top+=maxHeight
 - 完成
+
+
+- 关于marker的垂直对齐方案：rootInlineBox的logicalTop：“blockflow的top” + maxAscent - rootInlineBoxe的fontMetric.Ascent. 所以，像marker这种想把自己与该行对齐的需求，marker的inineBox的logicalTop应该设置成： “blockflow的top” + maxAscent - marker InlineBox的fontMetric.Ascent. 所以，marker logicalTop = rootInlineBox logicalTop + rootInlineBox fontMetric.Ascent - marker fontMetric.Ascent。
