@@ -112,7 +112,7 @@ LayoutListItem       li
 
 1. 通过`GetParentOfFirstLineBox`获取到marker需要对齐的行`line_box_parent`，并获得其rootinlinebox：`line_box_parent_root`
 2. 计算需要移动marker的偏移量
-	- 通过`line_box_parent_root`计算出
+	- 通过`line_box_parent_root`计算出marker的logicalTop
 		- marker的logicalTop = top + maxAscent - marker的fontmetric.ascent. (top = `line_box_parent`的LogicalHeight)
 		- `line_box_parent_root`的logicalTop = top + maxAscent - `line_box_parent_root`的fontmetric.ascent.
 		- marker的logicalTop = top + `line_box_parent_root`的fontmetric.ascent - marker的fontmetric.ascent。
@@ -131,10 +131,11 @@ LayoutListItem       li
 ```
 此处应该由个margin collapse，div的logicalTop最终是20px。但由于marker作为第一个孩子，layout tree变成
 ```
-<li style="margin-top:10px;">
-  <anonymous block>marker<anonymous block>
-  <div style="margin-top:20px">text</div>
-</li>
+LayoutListItem		margin-top:10px
+  LayoutBlock		anonymous
+    LayoutListMarker
+  LayoutBlock		div, margin-top:20px
+    LayoutText		"text"
 ```
 由于marker的存在，这会阻碍li和div的margin collapse。
 所以为了解决上述问题，在生成margin collapse的过程中，需要对marker做一些处理。
