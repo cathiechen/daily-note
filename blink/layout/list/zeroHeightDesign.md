@@ -30,7 +30,7 @@
 通过对现状的分析，我们可以看到，把marker加到li的孩子节点里面引起的问题。本方案把marker直接加为li的孩子。若li的孩子是block的，marker将独自占用一行，这里通过设置marker container的logicalHeight 0px解决该问题。下面是marker添加到layout tree及其position的流程：
 1. 添加marker到li中 ，确保marker是li的直接孩子节点，或者若产生匿名块marker container，marker将是其的唯一孩子（改变）
 2. 如果存在marker container，设置marker container的高度为0px。这样可以阻止marker产生一个新的行。（新增逻辑）
-3. block方向上对齐marker和li 的第一个inline box （新增逻辑）
+3. block方向上对齐marker和li 的第一个inline box, 通过`GetParentOfFirstLineBox`获取。 （新增逻辑）
 4. 处理marker在inline方向的位置
 
 ## details
@@ -112,11 +112,11 @@ LayoutListItem       li
 
 1. 通过`GetParentOfFirstLineBox`获取到marker需要对齐的行`line_box_parent`，并获得其rootinlinebox：`line_box_parent_root`
 2. 计算需要移动marker的偏移量
-	2.1 通过`line_box_parent_root`计算出
-		2.1.1 marker的logicalTop = top + maxAscent - marker的fontmetric.ascent. (top = `line_box_parent`的LogicalHeight)
-		2.1.2 `line_box_parent_root`的logicalTop = top + maxAscent - `line_box_parent_root`的fontmetric.ascent.
-		2.1.3 marker的logicalTop = top + `line_box_parent_root`的fontmetric.ascent - marker的fontmetric.ascent。
-	2.2 处理祖先节点和当前logicalTop的偏移量:offset = marker的logicalTop + line_box_parent block offset - marker old logicalTop - marker block offset。
+	- 通过`line_box_parent_root`计算出
+		- marker的logicalTop = top + maxAscent - marker的fontmetric.ascent. (top = `line_box_parent`的LogicalHeight)
+		- `line_box_parent_root`的logicalTop = top + maxAscent - `line_box_parent_root`的fontmetric.ascent.
+		- marker的logicalTop = top + `line_box_parent_root`的fontmetric.ascent - marker的fontmetric.ascent。
+	- 处理祖先节点和当前logicalTop的偏移量:offset = marker的logicalTop + line_box_parent block offset - marker old logicalTop - marker block offset。
 3. 垂直方向上移动marker的`InlineBoxWrapper` offset.
 具体见代码。
 
