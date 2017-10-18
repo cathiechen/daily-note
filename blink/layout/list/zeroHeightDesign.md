@@ -24,9 +24,9 @@
 	    <div style="overflow: hidden">xxx</div>
 	  </li>
 	```
-上面的例子中，在CR修改之前，marker被overflow hidden掉，无法显示出来；在crxxx后，可以显示，但会导致换行，这也是我们不想看到的。
+上面的例子中，在[CR2759883002](https://codereview.chromium.org/2759883002)修改之前，marker被overflow hidden掉，无法显示出来；在[CR2759883002](https://codereview.chromium.org/2759883002)后，可以显示，但会导致换行，这也是我们不想看到的。
 
-## ZeroHeight的解决方法的总体思路
+## 总体思路
 通过对现状的分析，我们可以看到，把marker加到li的孩子节点里面引起的问题。本方案把marker直接加为li的孩子。若li的孩子是block的，marker将独自占用一行，这里通过设置marker container的logicalHeight 0px解决该问题。下面是marker添加到layout tree及其position的流程：
 1. 添加marker到li中 ，确保marker是li的直接孩子节点，或者若产生匿名块marker container，marker将是其的唯一孩子（改变）
 2. 如果存在marker container，设置marker container的高度为0px。这样可以阻止marker产生一个新的行。（新增逻辑）
