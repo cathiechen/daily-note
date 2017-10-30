@@ -1,0 +1,4 @@
+ninja -C out/Default webkit_unit_tests
+out/Default/bin/run_webkit_unit_tests --gtest-filter TextAutosizerTest.*
+#TextAutosizerTest.*
+
