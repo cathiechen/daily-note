@@ -135,3 +135,19 @@ layout tree:
 
 
 - 关于marker的垂直对齐方案：rootInlineBox的logicalTop：“blockflow的top” + maxAscent - rootInlineBoxe的fontMetric.Ascent. 所以，像marker这种想把自己与该行对齐的需求，marker的inineBox的logicalTop应该设置成： “blockflow的top” + maxAscent - marker InlineBox的fontMetric.Ascent. 所以，marker logicalTop = rootInlineBox logicalTop + rootInlineBox fontMetric.Ascent - marker fontMetric.Ascent。
+
+
+## baseline
+
+从`AlignBoxInBlockDirection`那段可以知道：rootinlinebox并不会拥有任何inlinebox，它只是负责排版inlineboxes，它的logicalTop=maxAscent - fontMetrics.ascent. 它代表行的信息：收集maxAscent, maxDescent, maxPositionTop，maxPositionBottom. 
+
+baseline 和 ascent不可描述的关系：对这两个概念一值模糊，其实ascent是对font的，baseline对于inlinebox。baseline=ascent + (lineHeight - fontmetrics.height) / 2. 也就是说，baseline会带上lineheight的信息。lineheight就是css设置的那个。baseline是一段距离，linetop到position文字的ascent的距离。图片的话，就是：图片的高度+上下的margin.
+
+
+FirstLineBoxBaseline：FirstLineBox.LogicalTop() + FontMetrics.Ascent。其实，这是个位置。
+
+当lineHeight是自己产生的时候，FirstLineBoxBaseline 和 baseline是一样的。但由孩子节点产生时，这两个就不一样了。
+
+
+inlinebox的LogicalFrameRect: 不管lineheight设置多大，不会影响inlinebox高度，只会影响top. 这个应该是内容有多大，就是多大。
+
