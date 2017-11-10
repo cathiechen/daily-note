@@ -42,3 +42,7 @@ C++
  minichrome.exe!blink::LayoutBlockFlow::layoutBlockFlow(bool relayoutChildren, blink::LayoutUnit & pageLogicalHeight, blink::SubtreeLayoutScope & layoutScope) 行 377
 C++
 ```
+
+## 啊啊啊，两个坑！！！
+- hasOverflowClip(): 只是针对当前元素，孩子节点感受不到。我是什么时候产生的孩子节点也会返回true的错觉的！！！
+- FirstRootBox(): 若孩子是block节点，得到的是nullptr。。。我又是什么时候产生的会返回最里面那个rootinlinebox的错觉的！！！
