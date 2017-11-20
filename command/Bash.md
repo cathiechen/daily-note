@@ -86,7 +86,7 @@
 不同的包放在不同的源，设置源地址的方法：
 - sudo vi /etc/apt/sources.list 里加上类似`deb http://security.debian.org/debian-security jessie/updates main `的东西
 - 设置 软件更新 可以通过ui设置。
-
-设置完后，可以`sudo apt-get install libnss3`或者`sudo apt-get update libnss3`更新要更新的软件
+`sudo apt-get update` 更新
+设置完后，可以`sudo apt-get install libnss3`安装软件
 
 btw用history可以查看之前的输入历史。
