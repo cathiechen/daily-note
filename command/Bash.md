@@ -81,3 +81,12 @@
 - 文件别名：`ln xx xxagain` 硬连接，可删除； `ln -s xx xxagain`软连接，不可删除xx
 - 管道和重定向
 
+## ubuntu的软件更新
+一直不是很清楚，尽量把自己理解的记录下来，不一定对，但下次就不要再从头开始了。
+不同的包放在不同的源，设置源地址的方法：
+- sudo vi /etc/apt/sources.list 里加上类似`deb http://security.debian.org/debian-security jessie/updates main `的东西
+- 设置 软件更新 可以通过ui设置。
+
+设置完后，可以`sudo apt-get install libnss3`或者`sudo apt-get update libnss3`更新要更新的软件
+
+btw用history可以查看之前的输入历史。
