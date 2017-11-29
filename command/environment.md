@@ -25,3 +25,10 @@ lrwxrwxrwx 1 root root 46 Jun 27 17:20 /etc/alternatives/java -> /usr/lib/jvm/ja
 ## 更新环境变量
 - source ~/.bashrc
 - or new a command window
+
+## vim的设置
+不知道为啥，最近vim打开就有部分中文是乱码。网上查了解决方法，终于有个可以用了。
+```
+sudo vim /etc/vim/vimrc
+在该文件最后加上：set encoding=utf-8
+```
