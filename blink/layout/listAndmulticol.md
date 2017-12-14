@@ -20,7 +20,7 @@
               LayoutText 0x25971be500e0	#text "Text."
         LayoutMultiColumnSet (anonymous) 0x25971be44010
 ```
-mc分成两部分LayoutMultiColumnFlowThread和LayoutMultiColumnSet。从layout tree中可以看到LayoutMultiColumnFlowThread拥有了所有的孩子节点，拥有自己独自的坐标系，孩子节点根据自己距离LayoutMultiColumnSet的距离，决定该孩子节点所处column。LayoutMultiColumnSet没有孩子节点，但它决定了column的高度。layout会有很多变，具体触发的地方在：`LayoutBlockFlow::UpdateBlockLayout`
+mc分成两部分LayoutMultiColumnFlowThread和LayoutMultiColumnSet。从layout tree中可以看到LayoutMultiColumnFlowThread拥有了所有的孩子节点，拥有自己独自的坐标系，孩子节点根据自己距离LayoutMultiColumnSet的距离，决定该孩子节点所处column。LayoutMultiColumnSet没有孩子节点，但它决定了column的高度。layout会有很多遍，具体触发的地方在：`LayoutBlockFlow::UpdateBlockLayout`
 ```
     if (flow_thread && !flow_thread->FinishLayout()) {
       SetChildNeedsLayout(kMarkOnlyThis);
