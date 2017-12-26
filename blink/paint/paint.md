@@ -79,7 +79,7 @@
 
 整个流程，由pre-paint开始，这个过程将生成property tree.
 
-在paint时，每个生成的display item将和一个property tree state相关联。相邻的且拥有一样的property tree status的display item被分组成一个叫做`paintChunk`的东西。然后，`PaintArtifactCompositor`利用`paintChunk list` 进行分层(`layerization`)。 被composited的property node被转换成cc property node, 而非composited的property nodes被转换成meta display item（`PaintChunksToCcLayer`）。（what？！不是弃用了吗？！）
+在paint时，每个生成的display item将和一个property tree state(PropertyTreeState.h: 包含transform, clip 和 effect)相关联。相邻的且拥有一样的property tree status的display item被分组成一个叫做`paintChunk`的东西。然后，`PaintArtifactCompositor`利用`paintChunk list` 进行分层(`layerization`)。 被composited的property node被转换成cc property node, 而非composited的property nodes被转换成meta display item（`PaintChunksToCcLayer`）。（what？！不是弃用了吗？！）
 
 ![spv2](./spv2.png)
 
@@ -272,3 +272,42 @@ scroll offset or interest rect代表该layer是否需要paint。此时，若Prev
     - WebLayer的子类[src](https://cs.chromium.org/chromium/src/)/[cc](https://cs.chromium.org/chromium/src/cc/)/[blink](https://cs.chromium.org/chromium/src/cc/blink/)/[web_layer_impl.h](https://cs.chromium.org/chromium/src/cc/blink/web_layer_impl.h)。
     - 拥有cc::[Layer](https://cs.chromium.org/chromium/src/cc/layers/layer.h?l=63&ct=xref_jump_to_def&gsn=Layer)* [CcLayer](https://cs.chromium.org/chromium/src/third_party/WebKit/public/platform/WebLayer.h?l=241&gs=kythe%253A%252F%252Fchromium%253Flang%253Dc%25252B%25252B%253Fpath%253Dsrc%252Fthird_party%252FWebKit%252Fpublic%252Fplatform%252FWebLayer.h%2523XmxO7stkSo%25252Bb1dfcQSTPqBuk3aVDU8UDTrYv3OphUsI%25253D&gsn=CcLayer&ct=xref_usages)()， cc下面的各种layer [src](https://cs.chromium.org/chromium/src/)/[cc](https://cs.chromium.org/chromium/src/cc/)/[layers](https://cs.chromium.org/chromium/src/cc/layers/)，比如：经常看到的：[src](https://cs.chromium.org/chromium/src/)/[cc](https://cs.chromium.org/chromium/src/cc/)/[layers](https://cs.chromium.org/chromium/src/cc/layers/)/[picture_layer.h](https://cs.chromium.org/chromium/src/cc/layers/picture_layer.h)
 
+## pre-paint
+
+
+### list maker设置`SetFullPaintInvalidationReason`的过程
+
+`blink::InlineBox::MoveInBlockDirection`会标志layout object的`SetFullPaintInvalidationReason`的过程：
+```
+#0  0x00007fffe661230b in blink::LayoutObject::SetShouldDoFullPaintInvalidationWithoutGeometryChange(blink::PaintInvalidationReason) (this=0x321edf019290, reason=blink::kGeometry)
+    at ../../third_party/WebKit/Source/core/layout/LayoutObject.cpp:3486
+#1  0x00007fffe660f6f8 in blink::LayoutObject::SetShouldDoFullPaintInvalidation(blink::PaintInvalidationReason) (this=0x321edf019290, reason=blink::kFull)
+    at ../../third_party/WebKit/Source/core/layout/LayoutObject.cpp:3466
+#2  0x00007fffe66bfcdd in blink::LineLayoutItem::SetShouldDoFullPaintInvalidation() (this=0x321edf088038) at ../../third_party/WebKit/Source/core/layout/api/LineLayoutItem.h:303
+#3  0x00007fffe66bdae0 in blink::InlineBox::SetLineLayoutItemShouldDoFullPaintInvalidationIfNeeded() (this=0x321edf088010) at ../../third_party/WebKit/Source/core/layout/line/InlineBox.cpp:372
+#4  0x00007fffe66be95a in blink::InlineBox::Move(blink::LayoutSize const&) (this=0x321edf088010, delta=...) at ../../third_party/WebKit/Source/core/layout/line/InlineBox.cpp:221
+#5  0x00007fffe6566343 in blink::InlineBox::MoveInLogicalDirection(blink::LayoutSize const&) (this=0x321edf088010, delta_in_logical_direction=...)
+    at ../../third_party/WebKit/Source/core/layout/line/InlineBox.h:100
+#6  0x00007fffe6560c95 in blink::InlineBox::MoveInBlockDirection(blink::LayoutUnit) (this=0x321edf088010, delta=...) at ../../third_party/WebKit/Source/core/layout/line/InlineBox.h:107
+#7  0x00007fffe65f2b6c in blink::LayoutListItem::AlignMarkerInBlockDirection() (this=0x321edf06c010) at ../../third_party/WebKit/Source/core/layout/LayoutListItem.cpp:368
+#8  0x00007fffe65f1974 in blink::LayoutListItem::PositionListMarker() (this=0x321edf06c010) at ../../third_party/WebKit/Source/core/layout/LayoutListItem.cpp:375
+#9  0x00007fffe65f1898 in blink::LayoutListItem::AddOverflowFromChildren() (this=0x321edf06c010) at ../../third_party/WebKit/Source/core/layout/LayoutListItem.cpp:266
+#10 0x00007fffe651ae9f in blink::LayoutBlock::ComputeOverflow(blink::LayoutUnit, bool) (this=0x321edf06c010, old_client_after_edge=...) at ../../third_party/WebKit/Source/core/layout/LayoutBlock.cpp:484
+#11 0x00007fffe653daea in blink::LayoutBlockFlow::ComputeOverflow(blink::LayoutUnit, bool) (this=0x321edf06c010, old_client_after_edge=..., recompute_floats=false)
+    at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlow.cpp:2510
+#12 0x00007fffe652ffa7 in blink::LayoutBlockFlow::UpdateBlockLayout(bool) (this=0x321edf06c010, relayout_children=true) at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlow.cpp:507
+#13 0x00007fffe651a95c in blink::LayoutBlock::UpdateLayout() (this=0x321edf06c010) at ../../third_party/WebKit/Source/core/layout/LayoutBlock.cpp:428
+#14 0x00007fffe6534870 in blink::LayoutBlockFlow::PositionAndLayoutOnceIfNeeded(blink::LayoutBox&, blink::LayoutUnit, blink::BlockChildrenLayoutInfo&) (this=0x321edf019e20, child=..., new_logical_top=..., layout_info=...) at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlow.cpp:790
+#15 0x00007fffe6534c30 in blink::LayoutBlockFlow::LayoutBlockChild(blink::LayoutBox&, blink::BlockChildrenLayoutInfo&) (this=0x321edf019e20, child=..., layout_info=...)
+    at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlow.cpp:853
+
+```
+### invalidate reason
+
+在invalidatePaint过程中，获取并利用layout object的`FullPaintInvalidationReason()`的过程。
+[invalidata_reason](./invalidate_reason.png)
+
+### 从prepaint的walk到cc::layer的invalidateRect
+
+有了reason，标记出cc::layer需要更新的区域。
+[walk到invalidateRect](./prepaint_invalidate.png)
