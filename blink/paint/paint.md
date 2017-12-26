@@ -305,9 +305,9 @@ scroll offset or interest rect代表该layer是否需要paint。此时，若Prev
 ### invalidate reason
 
 在invalidatePaint过程中，获取并利用layout object的`FullPaintInvalidationReason()`的过程。
-[invalidata_reason](./invalidate_reason.png)
+![invalidata_reason](./invalidate_reason.png)
 
 ### 从prepaint的walk到cc::layer的invalidateRect
 
 有了reason，标记出cc::layer需要更新的区域。
-[walk到invalidateRect](./prepaint_invalidate.png)
+![walk到invalidateRect](./prepaint_invalidate.png)
