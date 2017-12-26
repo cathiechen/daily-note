@@ -311,3 +311,33 @@ scroll offset or interest rect代表该layer是否需要paint。此时，若Prev
 
 有了reason，标记出cc::layer需要更新的区域。
 ![walk到invalidateRect](./prepaint_invalidate.png)
+
+
+### slim paint
+之前的paint太复杂，所以各位大神重新设计了slim paint。
+[翻译](https://docs.google.com/presentation/d/1zpGlx75eTNILTGf3s_F6cQP03OGaN2-HACsZwEobMqY/edit#slide=id.p)
+总体思路是：paint产生display item，compositor利用这些display item list来分层和raster。若发生重绘，只需要重新生成相应obj的display items，其他的display item和layer可以充分复用。真是了不起的设计！
+blink所涉及到的改变
+- 每个obj都有自己painter
+- 所有paint相关的data都加到display item中
+- 只更新需要更新的display item，其他的复用。
+compositor所涉及到的改变：
+- 使用property tree而非layout tree
+- 负责分层
+-----
+[翻译](https://docs.google.com/presentation/d/17k62tf1zc5opvIfhCXMiL4UdI9UGvtCJbUEKMPlWZDY/edit#slide=id.p)
+compositor是基于display chunk。
+invalidate是基于layout object，而非rect。见'prepaint'
+如何invalidate一个obj:
+- 重新生成该obj的display item，并将其合并到list中。
+
+paint：
+- 遍历整个layout tree，对需要repaint的obj重新生成display item，不需要的则重用。
+
+property tree（更小）：
+- 分担一些composite的工作，维护：tranform、clipping(overflow)、scroll、opacity/filter信息
+
+分层：
+- 将display list分成各种chunks
+- composite一样的chunk
+- 符合条件的合并。
