@@ -25,8 +25,8 @@ layout之后，会cache结果，以免下次需要重做layout。
 ---
 ---
 
-##笔记
-最近看代码老走神！！！
+## 读代码笔记
+最近看代码老走神！！！TT
 在LayoutNG中，把layout result序列化为Fragment，相应的数据结构有：
 - `NGPhysicalFragment`
   - `NGPhysicalTextFragment`
@@ -81,7 +81,6 @@ layout是通过`NGLayoutAlgorithm`，这个类对外只提供两个函数：`Lay
     - `NGLineBoxFragmentBuilder`：
     - `NGFragmentBuilder`：这个命名不怎么谨慎吧？
 - `NGLayoutResult`：layout result，包含：`NGPhysicalFragment`，position，float等信息，应该是layout对外结果的一层封装。
-
 
 
 TODO:
