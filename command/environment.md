@@ -32,3 +32,8 @@ lrwxrwxrwx 1 root root 46 Jun 27 17:20 /etc/alternatives/java -> /usr/lib/jvm/ja
 sudo vim /etc/vim/vimrc
 在该文件最后加上：set encoding=utf-8
 ```
+
+## ubantu电脑桌面断电后坏了
+进入图形界面的command：startx
+推出图形界面：ctrl + alt + backspace
+
