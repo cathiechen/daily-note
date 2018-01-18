@@ -36,4 +36,4 @@ sudo vim /etc/vim/vimrc
 ## ubantu电脑桌面断电后坏了
 进入图形界面的command：startx
 推出图形界面：ctrl + alt + backspace
-
+ctrl + alt + T
