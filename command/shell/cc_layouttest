@@ -1,6 +1,6 @@
 ./cc_update Debug
 ninja -C out/Debug blink_tests
 
-python third_party/WebKit/Tools/Scripts/run-webkit-tests http/tests/devtools/sources/pretty-print-html-2.js -t Debug --android
-#python third_party/WebKit/Tools/Scripts/run-webkit-tests  --test-list=/big/newMyChromium/src/cc_list_failed_cases.txt -t Debug --android
+python third_party/WebKit/Tools/Scripts/run-webkit-tests fast/lists -t Debug --android
+#python third_party/WebKit/Tools/Scripts/run-webkit-tests  --test-list=/big/newMyChromium/src/cc_list_failed_cases3.txt -t Debug --android
 #--no-pixel-tests

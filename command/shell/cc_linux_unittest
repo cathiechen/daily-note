@@ -1,0 +1,2 @@
+ninja -C out/linuxBuild/ webkit_unit_tests
+./out/linuxBuild/webkit_unit_tests --gtest_filter=LayoutBoxTest.*

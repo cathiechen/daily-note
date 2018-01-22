@@ -1,0 +1,2 @@
+gdb --args out/linuxBuild/content_shell --enable-blink-features=LayoutNG --single-process
+#chrome --single-process

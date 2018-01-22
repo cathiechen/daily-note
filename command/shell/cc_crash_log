@@ -1,20 +1,32 @@
-I/DEBUG   (23770):     #00  pc 009d8256  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so
-I/DEBUG   (23770):     #01  pc 009e44b5  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so
-I/DEBUG   (23770):     #02  pc 009e4417  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so
-I/DEBUG   (23770):     #03  pc 009eb871  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::LayoutObject::HandleSubtreeModifications()+116)
-I/DEBUG   (23770):     #04  pc 009eb89b  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::LayoutObject::HandleSubtreeModifications()+158)
-I/DEBUG   (23770):     #05  pc 009eb89b  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::LayoutObject::HandleSubtreeModifications()+158)
-I/DEBUG   (23770):     #06  pc 009eb89b  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::LayoutObject::HandleSubtreeModifications()+158)
-I/DEBUG   (23770):     #07  pc 009eb89b  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::LayoutObject::HandleSubtreeModifications()+158)
-I/DEBUG   (23770):     #08  pc 0068a203  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::Document::NotifyLayoutTreeOfSubtreeChanges()+34)
-I/DEBUG   (23770):     #09  pc 00688779  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::Document::UpdateStyleAndLayoutTree()+236)
-I/DEBUG   (23770):     #10  pc 00690743  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::Document::FinishedParsing()+270)
-I/DEBUG   (23770):     #11  pc 008d70eb  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so
-I/DEBUG   (23770):     #12  pc 00905715  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so
-I/DEBUG   (23770):     #13  pc 008dc497  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::HTMLDocumentParser::end()+106)
-I/DEBUG   (23770):     #14  pc 008da287  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::HTMLDocumentParser::AttemptToRunDeferredScriptsAndEnd()+114)
-I/DEBUG   (23770):     #15  pc 008da1a3  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::HTMLDocumentParser::PrepareToStopParsing()+142)
-I/DEBUG   (23770):     #16  pc 008db58d  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::HTMLDocumentParser::ProcessTokenizedChunkFromBackgroundParser(std::__ndk1::unique_ptr<blink::HTMLDocumentParser::TokenizedChunk, std::__ndk1::default_delete<blink::HTMLDocumentParser::TokenizedChunk> >)+1208)
-I/DEBUG   (23770):     #17  pc 008da7f1  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::HTMLDocumentParser::PumpPendingSpeculations()+440)
-I/DEBUG   (23770):     #18  pc 008da621  /data/app-lib/org.chromium.content_shell_apk-1/libblink_core.cr.so (blink::HTMLDocumentParser::ResumeParsingAfterYield()+116)
-
+009d84fc
+009d7ab3
+009d7a73
+009d7c5f
+009d7c5f
+009d7a1b
+009d8327
+00a5bafd
+00a5ba39
+00a2f8cb
+00a2f955
+009f2e77
+009f304b
+009f2807
+009f1d1b
+009f1acb
+009eb721
+009f2e77
+009f304b
+009f2807
+009f1d1b
+009f1acb
+009eb721
+009f2e77
+009f304b
+009f2807
+009f1d1b
+009f1acb
+009eb721
+009f2e77
+009f304b
+009f2807

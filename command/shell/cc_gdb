@@ -1,2 +1,1 @@
-sb=$1
-build/android/adb_gdb_content_shell --output-directory="out/Debug"  --sandboxed=${sb} --su-prefix="su -c"
+ ./build/android/adb_gdb --package-name=org.chromium.content_shell_apk --output-directory=out/Debug
