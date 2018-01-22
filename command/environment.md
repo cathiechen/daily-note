@@ -55,35 +55,38 @@ sudo vim /etc/vim/vimrc
   - 解决方案：
     - [参考文档](https://wiki.archlinux.org/index.php/Locale_)
     - `locale`：看当前的设置
-      ```
-cc@cc:~$ locale
-LANG=en_US.UTF-8
-LANGUAGE=en_US:en
-LC_CTYPE="en_US.UTF-8"
-LC_NUMERIC="en_US.UTF-8"
-LC_TIME="en_US.UTF-8"
-LC_COLLATE="en_US.UTF-8"
-LC_MONETARY="en_US.UTF-8"
-LC_MESSAGES="en_US.UTF-8"
-LC_PAPER="en_US.UTF-8"
-LC_NAME="en_US.UTF-8"
-LC_ADDRESS="en_US.UTF-8"
-LC_TELEPHONE="en_US.UTF-8"
-LC_MEASUREMENT="en_US.UTF-8"
-LC_IDENTIFICATION="en_US.UTF-8"
-LC_ALL=
 
-      ```
+	```
+		cc@cc:~$ locale
+		LANG=en_US.UTF-8
+		LANGUAGE=en_US:en
+		LC_CTYPE="en_US.UTF-8"
+		LC_NUMERIC="en_US.UTF-8"
+		LC_TIME="en_US.UTF-8"
+		LC_COLLATE="en_US.UTF-8"
+		LC_MONETARY="en_US.UTF-8"
+		LC_MESSAGES="en_US.UTF-8"
+		LC_PAPER="en_US.UTF-8"
+		LC_NAME="en_US.UTF-8"
+		LC_ADDRESS="en_US.UTF-8"
+		LC_TELEPHONE="en_US.UTF-8"
+		LC_MEASUREMENT="en_US.UTF-8"
+		LC_IDENTIFICATION="en_US.UTF-8"
+		LC_ALL=
+	```
+
     - `locale -a`: 看当前有的字库？
     - 若有些字库没下载下来：`sudo vi /etc/locale.gen`
     - `locale-gen`: 生成locale
     - 设置环境变量：`/etc/environment` 或 `/etc/default/locale`。只有我觉得环境变量好乱吗？一定是我了解得不够！
       - `/etc/environment`：`LANG="en_US.UTF-8"`
       - `/etc/default/locale`: 
+	
 	```
-LANG=en_US.UTF-8
-LANGUAGE="en_US:en"
+		LANG=en_US.UTF-8
+		LANGUAGE="en_US:en"
 	```
+
 - `gnome-panel`:侧边栏出来了，上面的还是出不来了
   - 原因：大概是一运行起来就crash了，或运行了一会儿后crash了。。
   - 解决：
