@@ -108,3 +108,8 @@ sudo vim /etc/vim/vimrc
     - 减少开机，多保存，不只是本地保存啊。
     - 若开机黑屏：可以等一会儿; Ctrl + alt + f1 ,  startx，可行。
 我和linux的问题在于，网上搜到的命令，迫不及待想输进去看看，不知这个命令啥意思。感觉很恐怖。
+
+
+## 网络
+如果ifdown不能用，可以试试：sudo ifconfig eth0 down
+up，同理
