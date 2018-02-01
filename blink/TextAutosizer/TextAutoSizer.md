@@ -26,11 +26,11 @@
   - 创建： before layout
   - 功能：
     - beginlayout：
-      - prepareforlayout: PrepareClusterStack其实是准备cluster stack。对每个祖先节点MaybeCreateCluster
+      - 对此次layout pass 的第一个节点：prepareforlayout: PrepareClusterStack其实是准备cluster stack。对每个祖先节点MaybeCreateCluster
         - 什么样的节点要创建? cluster:diff suppresses; independent; explicit width
         - cluster包括：flag(independent), block, parent cluster, supercluster,deepest block containing all text, multiplier, has enough text等
         - super cluster: fingerprint相同的root大于等与2个。super cluster包括: roots， has enough text, multiplier, isinheritmulitiplier.
-      - layout view节点，此时应该check super cluster consistent. 遍历所有被mark的supercluster，重算multiplier，若multiplier发生变化，对这个supercluster set all text needs layout. clear marked supercluster list.
+      - 若是layout view节点，此时应该check super cluster consistent. 遍历所有被mark的supercluster，重算multiplier，若multiplier发生变化，对这个supercluster set all text needs layout. clear marked supercluster list.
     - 对当前block：MaybeCreateCluster
     - inflate
        - 对inline 节点递归到text节点。计算multiplier
