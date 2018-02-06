@@ -85,3 +85,33 @@ layout是通过`NGLayoutAlgorithm`，这个类对外只提供两个函数：`Lay
 
 TODO:
 学习下各种ptr，Optional等。。
+
+
+
+
+# LayoutNG Block Layout
+
+- formatting context: 代表css的display
+- block formatting context: 不是所有的block都创建new bfc。以下情况创建：overflow：hidden; root; flex；grid
+- NGPhysicalFragment：（aka.fragment）：包含layout产生的所有信息，可恩那个有些node有多个fragment，如：multi-column
+- NGLayoutResult:包含fragment和其他layout需要的信息。
+- NGConstraintSpace：包含所有来自parents的信息：available space; percentage fragmentation line？
+- NGExclusionSpace： float相关，float所有的logic都封装在里面。
+- NGLayoutInputNode，NGBlockNode，NGLineNode：通过调用layout获得fragment，基本上是const layout object的一个封装。
+- NGBreakToken：用于把layout函数传给调用函数，用于告诉child从某个断点开始恢复。
+
+基本原则：LayoutNG的input（NGConstraintSpace）和output（LayoutResult）都应该是const的。
+margin collapse：公式：max positive margin + min negative margin
+
+```
+NGMarginStrut{
+    positive_margin;
+    negative_margin;
+};
+
+```
+NGConstraintSpace有一个NGMarginStrut输入;
+LayoutResult有一个NGMarginStrut输出。
+
+NGBfcOffset：相对于parent bfc的offset。
+一个node的NGBfcOffset遇到非空内容时，才能被resolved
