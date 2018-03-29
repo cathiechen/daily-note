@@ -101,6 +101,14 @@ logcat 过滤：
 `adb logcat -c && adb logcat chromium:E *:S`
 
 
+## log
+
+打印layer tree
+```
+  showLayerTree(&paint_layer_.GetLayoutObject());
+  LOG(INFO) << "=======================";
+```
+
 ## how to set contentshell debuggable?
 --- a/content/shell/android/shell_apk/AndroidManifest.xml.jinja2
 +++ b/content/shell/android/shell_apk/AndroidManifest.xml.jinja2
@@ -215,4 +223,18 @@ BlockPainter::intersectsPaintRect
 - ` adb shell 'echo "chrome --enable-logging --v=1" > /data/local/tmp/content-shell-command-line'` 然后在跑content-shell
 
 
+## showLayerTree的坐标好混乱，可以这样改。。
 
+```
+LayoutRect LayoutBox::DebugRect() const {
+  LayoutRect rect = FrameRect();
+
+  LayoutBlock* block = ContainingBlock();
+  if (block)
+    block->AdjustChildDebugRect(rect);
+
+  LayoutRect debug_rect =  LayoutRect(LogicalLeft(), LogicalTop(), LogicalWidth(), LogicalHeight());
+  return debug_rect;
+  //return rect;
+}
+```

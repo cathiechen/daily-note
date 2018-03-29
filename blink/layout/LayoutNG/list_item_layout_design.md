@@ -42,3 +42,12 @@ LayoutNG是可以碎片化的啊，应该可以随时随地构建一个NGNode，
   - 不会！！！
 
 这样做会有什么问题吗？
+
+
+## ng上的实现
+
+啊啊啊，我一点都不想放假。。。
+
+- 创建一个height 0的marker，然后给它创建内容
+- block node layout时，对marker隔离处理：等所有兄弟节点layout完后，再layout marker
+- inline node layout时，判断如果是marker，对marker 的line box直接左移和垂直对齐（目前还没实现）

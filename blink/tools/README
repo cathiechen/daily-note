@@ -1,0 +1,9 @@
+# TOOLS
+
+主要收集各种tools，介绍及其作用。
+
+## Findit
+
+一个可以找到导致编译错误的提交，并自动revert的工具。现在先增了consistent test，若这些test通不过，此次提交的代码将被回滚。
+
+可以通过NOAUTOREVERT=true关闭该功能，详见：[https://chromium-review.googlesource.com/c/chromium/src/+/744731](https://chromium-review.googlesource.com/c/chromium/src/+/744731)
