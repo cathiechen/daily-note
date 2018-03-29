@@ -66,4 +66,22 @@ svg 图片的内在size需要传一个default size，不然就只能取到0 * 0�
 
 
 
+老的inlinelayout：
+
+```
+#0  0x00007fffea31de24 in blink::InlineFlowBox::PlaceBoxesInBlockDirection(blink::LayoutUnit, blink::LayoutUnit, blink::LayoutUnit, bool, blink::LayoutUnit&, blink::LayoutUnit&, blink::LayoutUnit&, bool&, blink::LayoutUnit&, blink::LayoutUnit&, bool&, bool&, blink::FontBaseline) (this=0x2b24ee23c0d8, top=..., max_height=..., max_ascent=..., no_quirks_mode=false, line_top=..., line_bottom=..., selection_bottom=..., set_line_top=@0x7fffba32691f: false, line_top_including_margins=..., line_bottom_including_margins=..., has_annotations_before=@0x7fffba32691e: false, has_annotations_after=@0x7fffba32691d: false, baseline_type=blink::kAlphabeticBaseline) at ../../third_party/WebKit/Source/core/layout/line/InlineFlowBox.cpp:774
+#1  0x00007fffea33e393 in blink::RootInlineBox::AlignBoxesInBlockDirection(blink::LayoutUnit, WTF::HashMap<blink::InlineTextBox const*, std::__1::pair<WTF::Vector<blink::SimpleFontData const*, 0ul, WTF::PartitionAllocator>, blink::GlyphOverflow>, WTF::PtrHash<blink::InlineTextBox const>, WTF::HashTraits<blink::InlineTextBox const*>, WTF::HashTraits<std::__1::pair<WTF::Vector<blink::SimpleFontData const*, 0ul, WTF::PartitionAllocator>, blink::GlyphOverflow> >, WTF::PartitionAllocator>&, blink::VerticalPositionCache&) (this=0x2b24ee23c0d8, height_of_block=..., text_box_data_map=..., vertical_position_cache=...) at ../../third_party/WebKit/Source/core/layout/line/RootInlineBox.cpp:283
+#2  0x00007fffea19ed82 in blink::LayoutBlockFlow::ComputeBlockDirectionPositionsForLine(blink::RootInlineBox*, blink::BidiRun*, WTF::HashMap<blink::InlineTextBox const*, std::__1::pair<WTF::Vector<blink::SimpleFontData const*, 0ul, WTF::PartitionAllocator>, blink::GlyphOverflow>, WTF::PtrHash<blink::InlineTextBox const>, WTF::HashTraits<blink::InlineTextBox const*>, WTF::HashTraits<std::__1::pair<WTF::Vector<blink::SimpleFontData const*, 0ul, WTF::PartitionAllocator>, blink::GlyphOverflow> >, WTF::PartitionAllocator>&, blink::VerticalPositionCache&) (this=0x2b24ee2083d0, line_box=0x2b24ee23c0d8, first_run=0xa7ce325c7a8, text_box_data_map=..., vertical_position_cache=...) at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlowLine.cpp:886
+#3  0x00007fffea19f349 in blink::LayoutBlockFlow::CreateLineBoxesFromBidiRuns(unsigned int, blink::BidiRunList<blink::BidiRun>&, blink::InlineIterator const&, blink::LineInfo&, blink::VerticalPositionCache&, blink::BidiRun*, WTF::Vector<blink::WordMeasurement, 64ul, WTF::PartitionAllocator> const&) (this=0x2b24ee2083d0, bidi_level=0, bidi_runs=..., end=..., line_info=..., vertical_position_cache=..., trailing_space_run=0x0, word_measurements=...) at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlowLine.cpp:953
+#4  0x00007fffea1a1325 in blink::LayoutBlockFlow::LayoutRunsAndFloatsInRange(blink::LineLayoutState&, blink::BidiResolver<blink::InlineIterator, blink::BidiRun, blink::BidiIsolatedRun>&, blink::InlineIterator const&, blink::BidiStatus const&) (this=0x2b24ee2083d0, layout_state=..., resolver=..., clean_line_start=..., clean_line_bidi_status=...)
+    at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlowLine.cpp:1200
+#5  0x00007fffea19f685 in blink::LayoutBlockFlow::LayoutRunsAndFloats(blink::LineLayoutState&) (this=0x2b24ee2083d0, layout_state=...)
+    at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlowLine.cpp:1008
+#6  0x00007fffea1a597e in blink::LayoutBlockFlow::LayoutInlineChildren(bool, blink::LayoutUnit) (this=0x2b24ee2083d0, relayout_children=true, after_edge=...)
+    at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlowLine.cpp:2000
+#7  0x00007fffea17b194 in blink::LayoutBlockFlow::LayoutChildren(bool, blink::SubtreeLayoutScope&) (this=0x2b24ee2083d0, relayout_children=true, layout_scope=...)
+    at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlow.cpp:588
+
+```
+
 
