@@ -115,3 +115,16 @@ LayoutResult有一个NGMarginStrut输出。
 
 NGBfcOffset：相对于parent bfc的offset。
 一个node的NGBfcOffset遇到非空内容时，才能被resolved
+
+
+
+# 各种fragment
+
+fragment相关数据结构整理：
+
+[fragment_1](./fragment_1.jpg)
+
+[fragment_2](./fragment_2.jpg)
+
+
+
