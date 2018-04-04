@@ -122,9 +122,9 @@ NGBfcOffset：相对于parent bfc的offset。
 
 fragment相关数据结构整理：
 
-[!fragment_1](./fragment_1.jpg)
+![fragment_1](./fragment_1.jpg)
 
-[!fragment_2](./fragment_2.jpg)
+![fragment_2](./fragment_2.jpg)
 
 
 
