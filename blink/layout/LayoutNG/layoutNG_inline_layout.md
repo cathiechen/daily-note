@@ -44,18 +44,18 @@ inline layout分一下步骤完成：
 ### 1. `Pre-layout`
 
 inline layout有一个pre layout的过程，为inline layout准备需要的数据结构。pre layout通过`NGInlineNode::PrepareLayout()`调用。分成以下步骤
-  1.1 `CollectInlines`：深度遍历container，收集non-atomic inline节点和text节点。Atomic inlines 由一个unicode object来表示，若不能用unicode object表示，则跳过。每个non-atomic inline 和 TextNodes保存到NGInlineItemsBuilder 中。在此过程中，同时处理好white-space。css的text-transform目前在layout tree中实现，后续想移动到这里。
+  1.1 `CollectInlines`：深度遍历container，收集non-atomic inline节点和text节点。Atomic inlines 由一个unicode object来表示，若不能用unicode object表示，则跳过。每个non-atomic inline 和 TextNodes保存到NGInlineItemsBuilder 中。在此过程中，同时处理好white-space。css的text-transform目前在layout tree中实现，后续想移动到这里。（cc：得到NGInlineItem vector, 主要由NGInlineItemsBuilder）
   1.2 `SegmentText`：处理bidi的分段和解析。
-  1.3 `ShapeText`：用harfbuzz获取resolved bidi run的形状
+  1.3 `ShapeText`：用harfbuzz获取resolved bidi run的形状(cc：`item.shape_result_`就是在这里得到的)
 
 ### 2. line break
 
-`NGLineBreaker`处理NGInlineItem：计算宽度，分行，然后每行产生一个NGInlineItemResult list。NGInlineItemResult中保存一些box construction需要的信息，比如： inline size 和 ShapeResult, Bidirectional text可能会导致后续需要重新计算。
+`NGLineBreaker`处理NGInlineItem：计算宽度，分行，然后每行产生一个NGInlineItemResult list。NGInlineItemResult中保存一些box construction需要的信息，比如： inline size 和 ShapeResult, Bidirectional text可能会导致后续需要重新计算。（cc：LineData提供line相关的信息）
 line break的步骤：
   2.1 Measures each item.
   2.2 把text NGInlineItem 放入multiple NGInlineItemResult中。主要实现逻辑在：ShapingLineBreaker.
   2.3 计算borders/margins/paddings的inline size。inline non-replaced elements此时忽略borders/margins/paddings的block size计算。因为只有inlne size会影响layout和分行。see [CSS Calculating widths and margins](https://drafts.csswg.org/css2/visudet.html#Computing_widths_and_margins)
-  2.4 决定哪些itme可以放进此行。
+  2.4 决定哪些item可以放进此行。
   2.5 决定items之间的break opportunity。If an item overflows, and there were no break opportunity before it, the item before must also overflow.（你说，这个怎么翻？！）
 
 ### 3. Line Box Construction

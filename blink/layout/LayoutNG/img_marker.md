@@ -1,6 +1,6 @@
 # image marker
 
-LayoutNG中iamge的实现逻辑。cr还没错过，还没上传，目前的逻辑是这样的。
+LayoutNG中image的实现逻辑。cr还没错过，还没上传，目前的逻辑是这样的。
 
 ## layout tree结构
 
