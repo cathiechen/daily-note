@@ -127,4 +127,14 @@ fragment相关数据结构整理：
 ![fragment_2](./fragment_2.jpg)
 
 
+# 各种offset和struct
 
+经常被offset弄得头晕，在这里总结一下。
+
+- NGPhysicalOffset 相对于parent rect的physical coordinate system的offset。成员变量名称：left、top.
+- NGLogicalOffset 相对于parent rect的logical coordinate system的offset。成员变量名称：`inline_offset`、`block_offset`.
+- NGBfcOffset 相对与bfc（block formatting context）的位置。成员变量名称：`line_offset`、`block_offset`. 对direction无感，所以转换成NGLogicalOffset时，需要考虑上direction。
+
+还要struct
+- NGBoxStrut：用于存储box四条边上的margin\padding\border。成员：`inline_start`, `inline_end`, `block_start`, `block_end`. This is logical!
+- NGMarginStrut：用于margin的collapse计算。暂时没用上

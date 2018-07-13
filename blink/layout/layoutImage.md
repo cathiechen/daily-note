@@ -24,6 +24,10 @@ LayoutImageResourceStyleImage主要是提供利用StyleImage创建LayoutImageRes
 
 StyleFetchedImage拥有一个ImageResourceContent，AddClient, RemoveClient都是直接调用ImageResourceContent的AddObserver和RemoveObserver。所以，layoutImage就可以获取到ImageResourceContent的变动信息了。
 
+### StyleGeneratedImage
+代表生成的图片，如gradient\cross-fade\paint()?等。对外来说最主要的作用是提供GetImage().
+拥有CSSImageGeneratorValue，CSSImageGeneratorValue的子类包含：CSSCrossfadeValue，CSSGradientValue，CSSPaintValue。
+以上3个类都各自有的GetImage. CSSGradientValue::GetImage，根据type不同创建出Gradient，如linear, radial, conic等。随后利用gradient创建GradientGeneratedImage。gradient中保存相关数据，在GradientGeneratedImage.draw被调用时，设置相关flag，然后画出来。所以其实不是事先生成图片保存才某个地方，而是记录flag，需要的时候画出来。
 
 ## ImageResourceContent
 
