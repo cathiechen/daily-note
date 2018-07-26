@@ -150,3 +150,10 @@ NG的inline layout
     at ../../third_party/WebKit/Source/core/layout/LayoutBlockFlow.cpp:588
 
 ```
+
+
+
+# NGInlineBoxState
+
+代表在NGInlineLayoutAlgorithm layout时的当前box状态信息。其中metrics是所有子孙节点metrics的合并，如lineheight等会影响这个值。NGInlineBoxState::ComputeTextMetrics里进行合并。
+在NGInlineLayoutAlgorithm::CreateLine中，会用到`box_states_`，是一个NGInlineBoxState的stack。NGInlineLayoutAlgorithm::CreateLine开始时会根据当前节点的style创建NGInlineBoxState，然后遍历`line_items`，对不同的item进行不同的处理，若openTag，就创建一个新的state压栈，closeTag及pop出栈。遇到text，不新建，但会通过ComputeTextMetrics，把text的metrics合并上去。最后会根据最后一个state的metrics计算垂直偏移量。

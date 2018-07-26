@@ -153,3 +153,58 @@ class MaxHeap {
 
 - 使用堆时的不方便
   - length_ 和 heap_length_ 的维护。length_ 代表array_ 的长度， heap_length_ 代表已经在堆中的长度。sort应该放在最后。也就是，如果：build，sort，再insert，这样length_ 和已经sort的元素会混乱。所以，正确顺序，应该是： build, insert, 确定不会再有新加元素了，在sort；或者把已经sort好的元素拷贝其它地方，这样新加的元素和已经sort的元素就没在一起排序了；或者再重新build，再insert，再sort。总之，最好是确定了基本不会再增加元素了，再sort。
+
+
+
+## binary search
+
+有三点需要注意：
+1. high, low, mid, length 都用unsigned.
+2. mid = low + (high - low) / 2; 防止overflow。
+3. 不应该使用high = mid - 1。因为unsigned，所以如果有减1,可能导致-1，unsigned表示则是超大的数字，导致overflow。
+
+参考：[http://www.cs.fsu.edu/~lacher/courses/COP4531/fall13/lectures/algorithms1/slide08.html](http://www.cs.fsu.edu/~lacher/courses/COP4531/fall13/lectures/algorithms1/slide08.html)
+```
+unsigned int lower_bound (T* v, unsigned int size, T t)
+{
+  unsigned int   low  = 0;
+  unsigned int   mid;
+  unsigned int   hih = size;
+  while (low < hih)
+  {
+    mid =  (low + hih) / 2;  
+    if (v[mid] < t)          
+      low = mid + 1;         
+    else                     
+      hih = mid;             
+  }  
+  return low;
+}
+unsigned int upper_bound (T* v, unsigned int size, T t)
+{
+  unsigned long   low = 0;
+  unsigned long   mid;
+  unsigned long   hih = size;
+  while (low < hih)
+  {
+    mid =  (low + hih) / 2;
+    if (t < v[mid]))
+      hih = mid;                
+    else                        
+      low = mid + 1;            
+  }  
+  return low;
+}
+bool binary_search (T* v, unsigned int size, T t)
+{
+  unsigned int lb = lower_bound(v,size,t);
+  if (lb < size)
+  {
+    if (t == v[lb])
+    {
+      return true;
+    }
+  }
+  return false;
+}
+```
