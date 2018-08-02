@@ -7,6 +7,8 @@ English:
 1. This convention might be employed. 
 2. unicode combining character
 3. an 'a' character followed by a combining ' ¨ ' character.
+4. costom定制
+
 
 Tec:
 4. [How input unicode?](https://en.wikipedia.org/wiki/Unicode_input)
@@ -31,4 +33,15 @@ Tec:
 
      
       3. test: ͡o͜o͡ 333  [https://www.lennyfaces.net/](https://www.lennyfaces.net/) interesting faces.
+
+
+
+
+2. line breaker
+一个都不能少！
+
+
+
+
+
 
