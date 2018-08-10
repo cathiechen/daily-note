@@ -101,3 +101,18 @@ base和wtf之间的冗余将会越来越小，这样可以让chromium和blink代
 ### Mojo
 
 `core/`, `modules/`, `bindings/`, `platform/` and `controller/`可以使用mojo直接和browser进程对话。这样可以减少不必要的public api和abstraction layers。非常推荐。
+
+
+
+-------------------
+------------------------
+------------------
+
+
+# [Mapping of spec concepts to code](https://cs.chromium.org/chromium/src/third_party/blink/renderer/SpecMapping.md)
+
+- [browsing context](https://html.spec.whatwg.org/#browsing-context) ==> [Frame]，具体实现在[LocalFrame]
+- [origins](https://html.spec.whatwg.org/multipage/browsers.html#concept-origin)  ==> [SecurityOrigin]
+- [Window object](https://html.spec.whatwg.org/#window)  ==>  [DOMWindow], [LocalDOMWindow]
+- [WindowProxy](https://html.spec.whatwg.org/#windowproxy)  ==> [WindowProxy class](https://cs.chromium.org/Source/bindings/core/v8/WindowProxy.h)
+- [canvas](https://html.spec.whatwg.org/multipage/scripting.html#the-canvas-element) ==> [HTMLCanvasElement], [HTMLCanvasElementModule]
