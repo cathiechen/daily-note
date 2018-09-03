@@ -1,0 +1,7 @@
+module cctest.mojom;
+
+const string kServiceName = "cctest";
+
+interface Logger {
+  Log(string message);
+};

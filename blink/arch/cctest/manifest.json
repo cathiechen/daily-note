@@ -1,0 +1,11 @@
+{
+  "name": "cctest",
+  "display_name": "Cctest Service",
+  "interface_provider_specs": {
+    "service_manager:connector": {
+      "provides": {
+        "cctest:logger": [ "cctest.mojom.Logger" ]
+      }
+    }
+  }
+}

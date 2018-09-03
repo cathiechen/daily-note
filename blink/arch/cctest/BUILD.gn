@@ -1,0 +1,31 @@
+import("//services/service_manager/public/cpp/service.gni")
+import("//services/service_manager/public/service_manifest.gni")
+
+source_set("lib") {
+  public = [ "cctest_service.h" ]
+  sources = [ 
+    "cctest_service.cc",
+    "logger.cc",
+    "logger.h"
+  ]
+
+  public_deps = [
+    "//base",
+    "//services/service_manager/public/cpp",
+    "//services/cctest/public:mojom",
+  ]
+}
+
+service("cctest_service") {
+  sources = [
+    "cctest_service_main.cc",
+  ]
+  deps = [
+    ":lib",
+  ]
+}
+
+service_manifest("manifest") {
+  name = "cctest"
+  source = "manifest.json"
+}
