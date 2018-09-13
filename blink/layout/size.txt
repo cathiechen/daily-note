@@ -1,0 +1,146 @@
+//view's width 
+0 AwContents.java:mContainerView.getWidth() 
+0 ContentViewCore.java:mViewportWidthPix
+0 RenderWidget::window_screen_rect_ 
+0 WebViewImpl::m_size
+
+0 LocalDOMWindow::outerWidth()
+0 LocalDOMWindow::outerHeight()
+#0  content::RenderWidget::rootWindowRect (this=0x91d26188) at ../../content/renderer/render_widget.cc:1393
+#1  0x7dff1bc4 in virtual thunk to content::RenderWidget::rootWindowRect() () from /big/bigtmp/blink/blink6.1/blink_qb/blink_db/blink_core/lib/chromium_org/out/Release/lib/libmttwebview.so
+#2  0x7d8ece66 in blink::ChromeClientImpl::windowRect (this=0x20230760) at ../../third_party/WebKit/Source/web/ChromeClientImpl.cpp:156
+#3  0x7db9f566 in WebCore::Chrome::windowRect (this=<optimized out>) at ../../third_party/WebKit/Source/core/page/Chrome.cpp:104
+#4  0x7db4130e in WebCore::LocalDOMWindow::outerWidth (this=<optimized out>) at ../../third_party/WebKit/Source/core/frame/LocalDOMWindow.cpp:1127
+#5  0x7dd86908 in outerWidthAttributeGetter (info=...) at gen/blink/bindings/core/v8/V8Window.cpp:899
+#6  WebCore::LocalDOMWindowV8Internal::outerWidthAttributeGetterCallback (info=...) at gen/blink/bindings/core/v8/V8Window.cpp:905
+#7  0x7d73c154 in v8::internal::PropertyCallbackArguments::Call (this=this@entry=0x81658934, f=f@entry=
+    0x7dd868e9 <WebCore::LocalDOMWindowV8Internal::outerWidthAttributeGetterCallback(v8::Local<v8::String>, v8::PropertyCallbackInfo<v8::Value> const&)>, arg1=arg1@entry=...)
+    at ../../v8/src/arguments.cc:87
+#8  0x7d82640c in v8::internal::Object::GetPropertyWithAccessor (receiver=receiver@entry=..., name=name@entry=..., holder=holder@entry=..., structure=...) at ../../v8/src/objects.cc:440
+#9  0x7d831bb4 in v8::internal::Object::GetProperty (it=it@entry=0x816589b8) at ../../v8/src/objects.cc:155
+
+host:
+//ContentViewCore.java:mViewportWidthPix
+#0  content::ContentViewCoreImpl::GetViewportSizePix (this=this@entry=0x847d9478) at ../../content/browser/android/content_view_core_impl.cc:823
+#1  0x7efb768a in content::ContentViewCoreImpl::GetViewportSizeDip (this=this@entry=0x847d9478) at ../../content/browser/android/content_view_core_impl.cc:842
+#2  0x7efb77f0 in content::ContentViewCoreImpl::GetViewSize (this=0x847d9478) at ../../content/browser/android/content_view_core_impl.cc:804
+#3  0x7f09cf82 in content::RenderWidgetHostViewAndroid::GetViewBounds (this=<optimized out>) at ../../content/browser/renderer_host/render_widget_host_view_android.cc:470
+#4  0x7f00eba2 in content::RenderWidgetHostViewChildFrame::GetBoundsInRootWindow (this=<optimized out>) at ../../content/browser/frame_host/render_widget_host_view_child_frame.cc:235
+#5  0x7f098cf8 in content::RenderWidgetHostImpl::SendScreenRects (this=this@entry=0x84908230) at ../../content/browser/renderer_host/render_widget_host_impl.cc:382
+#6  0x7f098d98 in content::RenderWidgetHostImpl::OnUpdateScreenRectsAck (this=0x84908230) at ../../content/browser/renderer_host/render_widget_host_impl.cc:1421
+#7  0x7f0982a2 in IPC::Message::Dispatch<content::RenderWidgetHostImpl, content::RenderWidgetHostImpl, void> (obj=<optimized out>, 
+    func=(void (content::RenderWidgetHostImpl::*)(content::RenderWidgetHostImpl * const)) 0x7f098d55 <content::RenderWidgetHostImpl::OnUpdateScreenRectsAck()>, parameter=0x0, sender=0x84908230, 
+    msg=0x82142df4) at ../../ipc/ipc_message.h:155
+
+
+
+//display rect, see: DeviceDisplayInfo.updateNativeSharedDisplayInfo
+1 js: window.screen 
+screen.cc:getNativeScreen
+screen_android.cc:getPrimaryDisplay
+device_display_info.cc:GetDisplayWidth
+shared_device_display_info.cc:GetDisplayWidth
+
+shared_device_display_info.cc:UpdateSharedDeviceDisplayInfo
+org.chromium.ui.gfx.DeviceDisplayInfo.nativeUpdateSharedDeviceDisplayInfo(int, int, int, int, int, int, double, int, int)
+org.chromium.ui.gfx.DeviceDisplayInfo.updateNativeSharedDisplayInfo()
+
+
+//viewport width 
+3 m_pageScaleConstraintsSet.pageDefinedConstraints().layoutSize
+3 FrameView::m_layoutSize,
+
+//width of htmlelement
+4 WebViewImpl::contentsSize()
+4 RenderView::documentRect().size();
+// renderView->documentRect()
+// Functions for getting/setting the size of the document contained inside the ScrollView (as an IntSize or as individual width and height
+// values).
+4 IntSize ScrollView::contentsSize() const OVERRIDE; // Always at least as big as the visibleWidth()/visibleHeight().
+
+
+viweport scale
+WebViewImpl::refreshPageScaleFactorAfterLayout()
+WebViewImpl::disableAutoResizeMode
+
+WebViewImpl::didChangeWindowResizerRect
+contentsPreferredMinimumSize
+setFixedLayoutSize
+enableAutoResizeMode
+didChangeContentsSize
+
+
+0.1 FrameView::visibleContentRect
+0.1 LocalDOMWindow::innerHeight() 
+0.1 LocalDOMWindow::innerWidth() 
+
+ScrollView.h
+
+0.1 IntSize visibleSize()
+    // The visible content rect has a location that is the scrolled offset of the document. The width and height are the viewport width
+    // and height. By default the scrollbars themselves are excluded from this rectangle, but an optional boolean argument allows them to be
+    // included.
+0.1 virtual IntRect visibleContentRect(IncludeScrollbarsInRect = ExcludeScrollbars)
+    // visibleContentRect().size() is computed from unscaledVisibleContentSize() divided by the value of visibleContentScaleFactor.
+    // For the main frame, visibleContentScaleFactor is equal to the page's pageScaleFactor; it's 1 otherwise.
+#0  WebCore::FrameView::setVisibleContentScaleFactor (this=this@entry=0x82ec5180, visibleContentScaleFactor=visibleContentScaleFactor@entry=0.367346942)
+    at ../../third_party/WebKit/Source/core/frame/FrameView.cpp:2487
+#1  0x807af3dc in WebCore::Page::setPageScaleFactor (this=0x7a445dc8, scale=scale@entry=0.367346942, origin=...) at ../../third_party/WebKit/Source/core/page/Page.cpp:367
+#2  0x805187c4 in blink::WebViewImpl::setPageScaleFactor (this=0x82e2c3c0, scaleFactor=<optimized out>, origin=...) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:3369
+#3  0x805198c2 in blink::WebViewImpl::setPageScaleFactor (this=0x82e2c3c0, scaleFactor=<optimized out>) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:3342
+#4  0x8051bda8 in blink::WebViewImpl::refreshPageScaleFactorAfterLayout (this=this@entry=0x82e2c3c0) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:3476
+#5  0x8051be46 in blink::WebViewImpl::layoutUpdated (this=0x82e2c3c0, webframe=<optimized out>) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:4272
+#6  0x8073f4de in WebCore::FrameView::layout (this=this@entry=0x82ec5180, allowSubtree=allowSubtree@entry=true) at ../../third_party/WebKit/Source/core/frame/FrameView.cpp:1111
+#7  0x8051c0ca in blink::WebViewImpl::resize (this=0x82e2c3c0, newSize=...) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:1763
+#8  0x80bef6b6 in content::RenderWidget::Resize (this=this@entry=0x7a2fd008, new_size=360x567, physical_backing_size=1080x1701, overdraw_bottom_height=0, visible_viewport_size=360x567, 
+    resizer_rect=0,0 0x0, is_fullscreen=false, resize_ack=resize_ack@entry=content::RenderWidget::SEND_RESIZE_ACK) at ../../content/renderer/render_widget.cc:660
+#9  0x80befef4 in content::RenderWidget::OnResize (this=this@entry=0x7a2fd008, params=...) at ../../content/renderer/render_widget.cc:746
+#10 0x80be6440 in content::RenderViewImpl::OnResize (this=0x7a2fd008, params=...) at ../../content/renderer/render_view_impl.cc:3286
+
+
+#0  WebCore::FrameView::setVisibleContentScaleFactor (this=this@entry=0x82ec5180, visibleContentScaleFactor=visibleContentScaleFactor@entry=1)
+    at ../../third_party/WebKit/Source/core/frame/FrameView.cpp:2487
+#1  0x807af3dc in WebCore::Page::setPageScaleFactor (this=0x7a445dc8, scale=scale@entry=1, origin=...) at ../../third_party/WebKit/Source/core/page/Page.cpp:367
+#2  0x805187c4 in blink::WebViewImpl::setPageScaleFactor (this=0x82e2c3c0, scaleFactor=<optimized out>, origin=...) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:3369
+#3  0x805198c2 in blink::WebViewImpl::setPageScaleFactor (this=0x82e2c3c0, scaleFactor=<optimized out>) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:3342
+#4  0x8051bc60 in blink::WebViewImpl::updatePageDefinedViewportConstraints (this=0x82e2c3c0, description=...) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:3549
+#5  0x807a0744 in WebCore::Chrome::dispatchViewportPropertiesDidChange (this=<optimized out>, description=...) at ../../third_party/WebKit/Source/core/page/Chrome.cpp:364
+#6  0x805289ae in WebCore::Document::updateViewportDescription (this=<optimized out>) at ../../third_party/WebKit/Source/core/dom/Document.cpp:3242
+#7  0x80528a1a in WebCore::Document::setViewportDescription (this=<optimized out>, viewportDescription=...) at ../../third_party/WebKit/Source/core/dom/Document.cpp:3233
+#8  0x80a00d48 in WebCore::HTMLMetaElement::processViewportContentAttribute (this=this@entry=0x240091e0, 
+    content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no", origin=origin@entry=WebCore::ViewportDescription::ViewportMeta)
+    at gen/blink/core/HTMLMetaElement.cpp:475
+#9  0x80a00dc2 in WebCore::HTMLMetaElement::process (this=0x240091e0) at gen/blink/core/HTMLMetaElement.cpp:526
+
+#0  WebCore::FrameView::setVisibleContentScaleFactor (this=this@entry=0x314c4500, visibleContentScaleFactor=visibleContentScaleFactor@entry=1.34940505)
+    at ../../third_party/WebKit/Source/core/frame/FrameView.cpp:2487
+#1  0x7f8873dc in WebCore::Page::setPageScaleFactor (this=0x87068aa0, scale=scale@entry=1.34940505, origin=...) at ../../third_party/WebKit/Source/core/page/Page.cpp:367
+#2  0x7f5f07c4 in blink::WebViewImpl::setPageScaleFactor (this=0x3142dc20, scaleFactor=<optimized out>, origin=...) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:3369
+#3  0x7f5f17c8 in blink::WebViewImpl::applyScrollAndScale (this=0x3142dc20, scrollDelta=..., pageScaleDelta=<optimized out>) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:4624
+#4  0x7fc947be in content::RenderWidgetCompositor::ApplyScrollAndScale (this=<optimized out>, scroll_delta=..., page_scale=<optimized out>) at ../../content/renderer/gpu/render_widget_compositor.cc:743
+#5  0x7ecadb86 in cc::LayerTreeHost::ApplyScrollAndScale (this=this@entry=0x85880c18, info=...) at ../../cc/trees/layer_tree_host.cc:1179
+#6  0x7ecc172e in cc::ThreadProxy::BeginMainFrame (this=0x858967f8, begin_main_frame_state=...) at ../../cc/trees/thread_proxy.cc:783
+#7  0x7ecc2d72 in Run (a1=..., object=<optimized out>, this=0x81d07ad8) at ../../base/bind_internal.h:190
+
+
+
+
+0 IntSize unscaledVisibleContentSize(IncludeScrollbarsInRect = ExcludeScrollbars) const;
+0 ScrollView::setFrameRect
+#0  setFrameRect (frame=..., this=0x244c5680) at ../../third_party/WebKit/Source/platform/Widget.h:63
+#0  WebCore::ScrollView::setFrameRect (this=this@entry=0x244c5680, newRect=...) at ../../third_party/WebKit/Source/platform/scroll/ScrollView.cpp:720
+#1  0x7d9d831c in WebCore::FrameView::setFrameRect (this=0x244c5680, newRect=...) at ../../third_party/WebKit/Source/core/frame/FrameView.cpp:383
+#2  0x7d7a7772 in WebCore::Widget::resize (this=<optimized out>, s=...) at ../../third_party/WebKit/Source/platform/Widget.h:68
+#3  0x7d7b405a in blink::WebViewImpl::resize (this=0x2442c000, newSize=...) at ../../third_party/WebKit/Source/web/WebViewImpl.cpp:1744
+#4  0x7de876b6 in content::RenderWidget::Resize (this=this@entry=0x873851e0, new_size=360x519, physical_backing_size=1080x1701, overdraw_bottom_height=0, visible_viewport_size=360x519, 
+    resizer_rect=0,0 0x0, is_fullscreen=false, resize_ack=resize_ack@entry=content::RenderWidget::SEND_RESIZE_ACK) at ../../content/renderer/render_widget.cc:660
+#5  0x7de87ef4 in content::RenderWidget::OnResize (this=this@entry=0x873851e0, params=...) at ../../content/renderer/render_widget.cc:746
+#6  0x7de7e440 in content::RenderViewImpl::OnResize (this=0x873851e0, params=...) at ../../content/renderer/render_view_impl.cc:3286
+#7  0x7de8904a in DispatchToMethod<content::RenderWidget, void (content::RenderWidget::*)(ViewMsg_Resize_Params const&), ViewMsg_Resize_Params> (arg=..., 
+    method=&virtual content::RenderWidget::OnResize(ViewMsg_Resize_Params const&), obj=0x873851e0) at ../../base/tuple.h:548
+#8  Dispatch<content::RenderWidget, content::RenderWidget, void, void (content::RenderWidget::*)(ViewMsg_Resize_Params const&)> (sender=0x873851e0, parameter=0x0, 
+    func=&virtual content::RenderWidget::OnResize(ViewMsg_Resize_Params const&), obj=0x873851e0, msg=0x86dfcc3c) at ../../content/common/view_messages.h:594
+
+
+
+
