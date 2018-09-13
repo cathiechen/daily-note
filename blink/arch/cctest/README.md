@@ -38,7 +38,7 @@ void CctestService::OnBindInterface(const service_manager::BindSourceInfo& remot
 
 ## 如何使用？
 
-1. `BrowserContext::Initialize`时添加cctest service
+1. `BrowserContext::Initialize`时添加cctest service,创建一个services：`std::make_unique<CctestService>()`
 
 ```
     {

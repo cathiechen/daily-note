@@ -1,0 +1,3 @@
+ninja -C out/linuxBuild content_shell
+#chrome
+#content_shell

@@ -1,0 +1,5 @@
+git cl format
+
+./cc_linux_build
+
+./cc_linux_ng_gdb

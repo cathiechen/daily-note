@@ -1,0 +1,15 @@
+fast/css/first-child-pseudo-class.html     pre的默认字体是13px， marker的是16px。所以，如果marker在pre里面layout，将撑高第一行。现在把marker提出来了，第一行高就变小了。
+fast/css/first-of-type-pseudo-class.html  同上
+fast/css/last-child-pseudo-class.html    同上
+fast/css/last-of-type-pseudo-class.html  同上
+fast/css/only-child-pseudo-class.html    同上
+fast/css/only-of-type-pseudo-class.html  同上
+
+fast/forms/date/date-appearance-pseudo-elements.html    li的fontsize是16px，但input的是13.3px。所以以前把marker加到input里面，input被撑大了。现在把marker提取出来，不影响input高度。所以导致测试结果和以前不一样。
+fast/forms/month/month-appearance-pseudo-elements.html  同上
+fast/forms/time/time-appearance-pseudo-elements.html    同上
+fast/forms/week/week-appearance-pseudo-elements.html    同上
+
+fast/text-autosizing/list-marker-with-images-and-forms-autosizing.html   input不会被autosize放大，marker又不影响list的高度，所以导致最后一个list上移
+
+paint/invalidation/offset-change-wrong-invalidation-with-float.html      里面的内容就只有7×19啊，不明白为啥要18×19...

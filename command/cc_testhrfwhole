@@ -1,0 +1,6 @@
+#mv  /big/newMyChromium/src/tools/perf/results.html /big/newMyChromium/src/tools/perf/results_lasttime.html
+
+./cc_telemetry $1 with
+
+./cc_telemetry $1 without
+

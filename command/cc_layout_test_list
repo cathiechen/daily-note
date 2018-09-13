@@ -1,0 +1,13 @@
+ fast/table/border-collapsing/004-vertical.html 
+ fast/table/border-collapsing/composited-cell-collapsed-border.html 
+ fast/table/column-in-inline.html 
+ fast/table/dynamic-descendant-percentage-height.html 
+ fast/table/empty-table-percent-height.html 
+ fast/table/height-percent-test-vertical.html 
+ fast/table/percent-height-overflow-auto-content-in-cell.html 
+ fast/table/percent-height-overflow-scroll-content-in-cell.html 
+ fast/table/percent-height-replaced-content-in-cell.html 
+ fast/table/table-continuation-outline-paint-crash.html 
+ fast/table/table-display-types-vertical.html 
+ fast/table/unbreakable-images-quirk.html 
+ fast/table/vertical-align-baseline-readjust.html 

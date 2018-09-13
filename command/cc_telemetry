@@ -1,0 +1,31 @@
+
+adb -s 015d2109824c120b  uninstall org.chromium.content_shell_apk
+
+#apk =out/Default/apks/ContentShell_with_shaking.apk
+
+if [ $2 == "with" ]; then
+  echo "with shaking!!!!!!!!!"
+  apk=out/Default/apks/ContentShell_with_shaking.apk
+  #adb install out/Default/apks/ContentShell_with_shaking.apk
+else
+  echo "without shakinng!!"
+  apk=out/Default/apks/ContentShell_without_shaking.apk
+  #adb install out/Default/apks/ContentShell_without_shaking.apk
+fi 
+
+echo $apk
+adb -s 015d2109824c120b install $apk
+ 
+n=1
+while [[ $n -le $1 ]];do
+  tools/perf/run_benchmark --device=015d2109824c120b --browser=exact --browser-executable=$apk --pageset-repeat=1 --also-run-disabled-tests blink_perf.dom
+  ((n++))
+done
+
+
+  #out/Default/apks/ContentShell_without_shaking.apk
+  #tools/perf/run_benchmark --device=015d2109824c120b --browser=exact --browser-executable=out/Default/apks/ContentShell_with_shaking.apk --pageset-repeat=1 --also-run-disabled-tests blink_perf.dom
+  #tools/perf/run_benchmark --device=015d2109824c120b --browser=exact --browser-executable=out/Default/apks/ContentShell_without_shaking.apk --pageset-repeat=1 --also-run-disabled-tests blink_perf.dom
+  #tools/perf/run_benchmark --device=015d2109824c120b --browser=exact --browser-executable=out/Default/apks/ContentShell.apk --pageset-repeat=1 --also-run-disabled-tests blink_perf.dom
+  #tools/perf/run_benchmark -v --device=015d2109824c120b --browser=exact --browser-executable=out/Default/apks/ContentShell.apk --output-format=chartjson --upload-results --pageset-repeat=1 --also-run-disabled-tests thread_times.tough_scrolling_cases
+  #itools/perf/run_benchmark -v --device=015d2109824c120b --browser=exact --browser-executable=out/Default/apks/ContentShell.apk  --pageset-repeat=1 --also-run-disabled-tests thread_times.tough_scrolling_cases

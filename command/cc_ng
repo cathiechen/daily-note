@@ -1,0 +1,5 @@
+adb shell am start \
+  -a android.intent.action.VIEW \
+  -n org.chromium.content_shell_apk/.ContentShellActivity \
+  --es activeUrl "http://chromium.org" \
+  --es commandLineArgs --enable-layout-ng

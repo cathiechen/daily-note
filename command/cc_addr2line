@@ -1,0 +1,11 @@
+#! /bin/bash
+# Author: Neden Wang 
+# Created: 2015-01-16
+
+#TOP_DIR=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+ADDR2LINE=third_party/android_tools/ndk/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-addr2line
+LIBRARY=out/Debug/libblink_core.cr.so
+#LIBRARY="${TOP_DIR}"/blink_core/lib/chromium_org/out/Release/lib/libcontent_shell_content_view.so
+CRASH_FILE=cc_crash_log
+
+cat "${CRASH_FILE}" | sed "s;.*\(0[0-9a-z]\{7\}\).*;${ADDR2LINE} -C -f -e ${LIBRARY} \1;g" | sh

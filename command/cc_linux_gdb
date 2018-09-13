@@ -1,0 +1,2 @@
+gdb --args out/linuxBuild/content_shell --single-process  --service-name=content_packaged_services file:///home/cc/bigbak/cathie/arch/frames.html 
+#chrome --single-process

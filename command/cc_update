@@ -1,0 +1,7 @@
+#out/Release is release version
+#out/Debug is the debug version
+package=$1
+ninja -C out/${package} content_shell_apk
+adb uninstall org.chromium.content_shell_apk
+adb install out/${package}/apks/ContentShell.apk
+

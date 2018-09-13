@@ -1,0 +1,4 @@
+git pull --rebase && gclient sync
+git checkout $1
+git rebase master
+./cc_linux_build

@@ -1,0 +1,2 @@
+gdb --args out/linuxBuild/content_shell --enable-blink-features=LayoutNG --single-process file:///big/newMyChromium/src/third_party/WebKit/LayoutTests/fast/dynamic/first-letter-after-list-marker.html 
+#chrome --single-process

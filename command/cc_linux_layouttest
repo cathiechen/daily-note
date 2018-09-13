@@ -1,0 +1,9 @@
+#ninja -C out/linuxBuild blink_tests
+
+#python third_party/WebKit/Tools/Scripts/run-webkit-tests  printing/text-color-adjust.html  -t linuxBuild --additional-driver-flag=--enable-blink-features=LayoutNG
+#python third_party/WebKit/Tools/Scripts/run-webkit-tests  --test-list=/big/newMyChromium/src/cc_list_failed_cases3.txt -t Debug --android
+#--no-pixel-tests
+#ninja -C out/linuxBuild blink_tests
+
+python third_party/WebKit/Tools/Scripts/run-webkit-tests external/wpt/css/css-lists  -t linuxBuild
+

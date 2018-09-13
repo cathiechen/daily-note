@@ -1,0 +1,8 @@
+#./cc_update Debug
+#ninja -C out/linuxBuild blink_tests
+
+./cc_linux_build
+
+python third_party/WebKit/Tools/Scripts/run-webkit-tests  --test-list=./cc_layout_test_list  -t linuxBuild --additional-driver-flag=--enable-blink-features=LayoutNG
+#python third_party/WebKit/Tools/Scripts/run-webkit-tests  --test-list=/big/newMyChromium/src/cc_list_failed_cases3.txt -t Debug --android
+#--no-pixel-tests

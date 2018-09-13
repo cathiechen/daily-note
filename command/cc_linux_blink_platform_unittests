@@ -1,0 +1,6 @@
+
+#out/linuxBuild
+ninja -C out/linuxBuild  blink_platform_unittests
+out/linuxBuild/blink_platform_unittests  --gtest_filter=HarfBuzzShaperTest.CachedOffsetPositionMappingForOffsetLatin
+#TextAutosizerTest.*
+
