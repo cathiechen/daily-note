@@ -24,3 +24,5 @@
 另外在[packages.ubuntu.com](https://packages.ubuntu.com)可以查看，某个package是否存在。 
 
 3. 安必要的工具： `sudo apt-get install vim/net-tools/silversearcher-ag`
+
+4. 下载下来的新的代码，莫名其妙就是报错？可以去相应的目录，`git pull` :)
