@@ -8,18 +8,18 @@
 ## LayoutObject的继承关系
 
 - LayoutObject
-        - LayoutText
-        - *LayoutBoxModel*
-                - *LayoutInline*
-                - *LayoutBox*
-                        - LayoutReplace
-                        - *LayoutListMarker*
-                        - LayoutBlock
-                                - *LayoutBlockFlow*
-                                - flex
-                                - grid
-                                - table
-                                - scrollBar
+    - LayoutText
+    - *LayoutBoxModel*
+    - *LayoutInline*
+    -  *LayoutBox*
+        -  LayoutReplace
+        - *LayoutListMarker*
+        -  LayoutBlock
+            -  *LayoutBlockFlow*
+            - flex
+            -  grid
+            -  table
+            -  scrollBar
 
 ## node的继承关系
 

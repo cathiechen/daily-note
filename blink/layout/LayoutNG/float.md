@@ -10,7 +10,7 @@ float一直是个迷，不管是legacy layout还是LayoutNG。最近在处理lis
 
 ## float layout之后存在何处
 
-在`ng_floats_utils.cc`中处理float，PositionFloat()。可以看到float在layout之后，生成了一个NGExclusion，并把这个NGExclusion加到`exclusion_space（NGExclusionSpace）`中。add的过程中，会生成shelf，并把shelf添加到shelves列表中。（这个过程好像很负责，见：`NGExclusionSpace::Add`）
+在`ng_floats_utils.cc`中处理float，PositionFloat()。可以看到float在layout之后，生成了一个NGExclusion，并把这个NGExclusion加到`exclusion_space（NGExclusionSpace）`中。add的过程中，会生成shelf，并把shelf添加到shelves列表中。（这个过程好像很复杂，见：`NGExclusionSpace::Add`）
 NGExclusion：代表一个float。包含的数据结构：NGBfcRect，EFloat，NGExclusionShapeData。 NGExclusionShapeData包含layoutobject，margin，`shape_insets`信息。
 
 NGExclusionSpace：代表这个bfc中所有的NGExclusions，即float。这个类很重要啊，可以FindLayoutOpportunity()。
