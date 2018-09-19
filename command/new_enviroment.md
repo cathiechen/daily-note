@@ -26,3 +26,17 @@
 3. 安必要的工具： `sudo apt-get install vim/net-tools/silversearcher-ag`
 
 4. 下载下来的新的代码，莫名其妙就是报错？可以去相应的目录，`git pull` :)
+
+
+## windows
+
+1. 安装：
+   1. foxmail， 搜狗输入法，chrome, 企业微信等等
+   2. sublime text， edraw max, typora, slack 等等
+2. 拷贝旧电脑的东西到新电脑
+   1. 照片
+   2. 工具：vs， va等等
+   3. 文档，文档存放要合理哇~~~
+3. 账号
+   1. slack：https://chromiumdev.slack.com/
+   2. chromerenderingcore.slack.com
