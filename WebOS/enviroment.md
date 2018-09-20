@@ -51,3 +51,31 @@ Basicly, this is to change `vmdk_file_path`, value the image you built, e.g: `~/
 ### reference:
 1. [QEMUx86 Emulator for Linux](http://webosose.org/develop/sdk-tools/emulator/qemux86-emulator-linux/)
 
+
+## Install Command Line Interface
+
+[download and install CLI](http://webosose.org/develop/sdk-tools/cli/download-and-install/)
+
+1. Firstly, download it.
+2. Unzip: `tar -xzvf xxx.tgz`
+3. Add `ares-cli/bin` to PATH. How?
+ 
+3.1. `vi ~/.profile`
+
+3.2. 
+```
+# add CLI path
+if [ -d "$HOME/ares-cli/bin" ]; then
+  export PATH="$PATH:$HOME/ares-cli/bin"
+fi
+```
+3.3. `$ source ~/.profile`
+
+3.4. `$ echo $PATH`
+
+
+
+## wechat process
+
+
+https://chromium.googlesource.com/chromium/src.git/+/53.0.2744.1

@@ -13,6 +13,7 @@
   - `sudo fdisk /dev/sdb`，可以进行分区啥的
   - `sudo mount /dev/sdb5 ./disk`， 把sdb5 mount到disk上，这是临时的，可以跳过，记得修改disk的chown
   - 永久mount，`sudo vi /etc/fstab`，按照规则添
+  - If U wanna creat an ext4 filesystem: `sudo mkfs.ext4 /dev/sdb5`  
   - 参考1： 鸟哥
   - 参考2： [linux下磁盘分区、挂载知多少](https://www.jianshu.com/p/ce31ae7da616)
 
