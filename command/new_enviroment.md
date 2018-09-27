@@ -28,6 +28,36 @@
 
 4. 下载下来的新的代码，莫名其妙就是报错？可以去相应的目录，`git pull` :)
 
+5. Proxy setting:
+
+- Apply the right: office.oa
+- argument with someone
+- UI setting: network, proxy setting: `http://txpxxx.com/xxx/xx.pac`
+- Now u still couldn't `git clone` by command line, so set http-proxy and https-proxy at `~/.bashrc`
+
+```
+export https_proxy=http://dev-xxxxx.xx.xxx:8080
+export http_proxy=http://dev-xxxxx.xx.xx:8080
+```
+- Then u could git clone and browser....
+
+6. fetch chromium code. There's approxymately 11G to download. So share wifi by usb isn't gonna work. Give up, and use an wire network. Make sure the download speed up to: 
+
+```
+[0:16:50] Still working on:
+[0:16:50]   src
+Receiving objects:  59% (6708776/11353226), 1.88 GiB | 1.91 MiB/s 
+```
+
+Good luck!!!
+
+7. add source in two ways:
+
+- open "software & update", "other software" tab, hit add button: `deb http://mirrors.ustc.edu.cn/ubuntu bionic main`. open "ubuntu software" tab, change download from option to it.
+- I think add `deb http://mirrors.ustc.edu.cn/ubuntu bionic main` to `/etc/apt/sources.list` would work.
+
+I do think source make linux uneasy to get started.
+
 
 ## windows
 
