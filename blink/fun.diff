@@ -1,0 +1,392 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 77de65b..9e27406 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -1181,3 +1181,4 @@ if (closure_compile) {
+ assert_valid_out_dir("_unused") {
+   actual_sources = [ "$root_build_dir/foo" ]
+ }
++
+diff --git a/build/config/sysroot.gni b/build/config/sysroot.gni
+index 701c660..aef2aa2 100644
+--- a/build/config/sysroot.gni
++++ b/build/config/sysroot.gni
+@@ -60,6 +60,8 @@ if (current_os == target_os && current_cpu == target_cpu &&
+                     "string") == "True",
+         "Missing sysroot ($sysroot). To fix, run: build/linux/sysroot_scripts/install-sysroot.py --arch=$_script_arch")
+   }
++
++
+ } else if (is_mac) {
+   import("//build/config/mac/mac_sdk.gni")
+   sysroot = mac_sdk_path
+diff --git a/content/browser/BUILD.gn b/content/browser/BUILD.gn
+index fedfd4a..73a87cd 100644
+--- a/content/browser/BUILD.gn
++++ b/content/browser/BUILD.gn
+@@ -136,6 +136,7 @@ jumbo_source_set("browser") {
+     "//services/device/public/mojom:generic_sensor",
+     "//services/file:lib",
+     "//services/file/public/mojom",
++    "//services/cctest:lib",
+     "//services/metrics",
+     "//services/metrics/public/cpp:metrics_cpp",
+     "//services/network:network_service",
+diff --git a/content/browser/browser_context.cc b/content/browser/browser_context.cc
+index 0e30f88..b1bf1ea 100644
+--- a/content/browser/browser_context.cc
++++ b/content/browser/browser_context.cc
+@@ -64,6 +64,8 @@
+ #include "storage/browser/database/database_tracker.h"
+ #include "storage/browser/fileapi/external_mount_points.h"
+ 
++#include "services/cctest/cctest_service.h"
++#include "services/cctest/public/logger.mojom.h"
+ 
+ using base::UserDataAdapter;
+ 
+@@ -553,6 +555,12 @@ void BrowserContext::Initialize(
+ 
+     {
+       service_manager::EmbeddedServiceInfo info;
++      info.factory = base::BindRepeating(&cctest::CreateCctestService);
++      connection->AddEmbeddedService(cctest::mojom::kServiceName, info);
++    }
++
++    {
++      service_manager::EmbeddedServiceInfo info;
+       info.factory = base::BindRepeating(&file::CreateFileService);
+       connection->AddEmbeddedService(file::mojom::kServiceName, info);
+     }
+diff --git a/content/public/app/BUILD.gn b/content/public/app/BUILD.gn
+index 4bf0958..cda73e8 100644
+--- a/content/public/app/BUILD.gn
++++ b/content/public/app/BUILD.gn
+@@ -209,6 +209,7 @@ service_manifest("browser_manifest") {
+   packaged_services = [
+     "//services/content:manifest",
+     "//services/file:manifest",
++    "//services/cctest:manifest",
+   ]
+ }
+ 
+@@ -234,6 +235,9 @@ service_manifest("renderer_manifest") {
+   name = "content_renderer"
+   source = "mojo/content_renderer_manifest.json"
+   overlays = [ ":snapshot_manifest" ]
++  packaged_services = [
++    "//services/cctest:manifest",
++  ]
+ }
+ 
+ service_manifest("utility_manifest") {
+diff --git a/content/public/app/mojo/content_browser_manifest.json b/content/public/app/mojo/content_browser_manifest.json
+index 9718b97..f9f24cb 100644
+--- a/content/public/app/mojo/content_browser_manifest.json
++++ b/content/public/app/mojo/content_browser_manifest.json
+@@ -108,6 +108,7 @@
+           "device:wake_lock"
+         ],
+         "file": [ "file:filesystem", "file:leveldb" ],
++        "cctest": ["cctest:logger"],
+         "media": [ "media:media" ],
+         "metrics": [ "url_keyed_metrics" ],
+         "network": [
+diff --git a/content/public/app/mojo/content_renderer_manifest.json b/content/public/app/mojo/content_renderer_manifest.json
+index 70c6782..114948b 100644
+--- a/content/public/app/mojo/content_renderer_manifest.json
++++ b/content/public/app/mojo/content_renderer_manifest.json
+@@ -34,6 +34,7 @@
+           "renderer"
+         ],
+         "font_service": [ "font_service" ],
++        "cctest": ["cctest:logger"],
+         "metrics": [ "url_keyed_metrics" ],
+         "device": [
+           "device:power_monitor",
+diff --git a/content/renderer/render_thread_impl.cc b/content/renderer/render_thread_impl.cc
+index 31dae68..013218f 100644
+--- a/content/renderer/render_thread_impl.cc
++++ b/content/renderer/render_thread_impl.cc
+@@ -171,6 +171,9 @@
+ #include "ui/base/ui_base_switches.h"
+ #include "ui/display/display_switches.h"
+ 
++#include "services/cctest/public/logger.mojom.h"
++
++
+ #if defined(OS_ANDROID)
+ #include <cpu-features.h>
+ #include "content/renderer/android/synchronous_layer_tree_frame_sink.h"
+@@ -786,6 +789,13 @@ void RenderThreadImpl::Init(
+                              : ui::mojom::kServiceName,
+                          GetIOTaskRunner());
+ 
++
++  cctest::mojom::LoggerPtr logger;
++  GetConnector()->BindInterface(cctest::mojom::kServiceName, &logger);
++  LOG(INFO) << "RenderThreadImpl::Init logger->Log send msg";
++  logger->Log("hello from the other side~");
++
++
+   resource_dispatcher_.reset(new ResourceDispatcher());
+   url_loader_throttle_provider_ =
+       GetContentClient()->renderer()->CreateURLLoaderThrottleProvider(
+diff --git a/gpu/command_buffer/service/error_state.cc b/gpu/command_buffer/service/error_state.cc
+index 72c18d2..765c355 100644
+--- a/gpu/command_buffer/service/error_state.cc
++++ b/gpu/command_buffer/service/error_state.cc
+@@ -15,6 +15,8 @@
+ #include "gpu/command_buffer/service/logger.h"
+ #include "ui/gl/gl_bindings.h"
+ 
++#define GL_CONTEXT_LOST_KHR 0
++
+ namespace gpu {
+ namespace gles2 {
+ 
+diff --git a/mojo/public/cpp/system/invitation.cc b/mojo/public/cpp/system/invitation.cc
+index f70c435..8d7eca8 100644
+--- a/mojo/public/cpp/system/invitation.cc
++++ b/mojo/public/cpp/system/invitation.cc
+@@ -218,7 +218,7 @@ IncomingInvitation IncomingInvitation::Accept(
+   MojoPlatformHandle endpoint_handle;
+   PlatformHandle::ToMojoPlatformHandle(channel_endpoint.TakePlatformHandle(),
+                                        &endpoint_handle);
+-  CHECK_NE(endpoint_handle.type, MOJO_PLATFORM_HANDLE_TYPE_INVALID);
++  //CHECK_NE(endpoint_handle.type, MOJO_PLATFORM_HANDLE_TYPE_INVALID);
+ 
+   MojoInvitationTransportEndpoint transport_endpoint;
+   transport_endpoint.struct_size = sizeof(transport_endpoint);
+@@ -242,7 +242,7 @@ ScopedMessagePipeHandle IncomingInvitation::AcceptIsolated(
+   MojoPlatformHandle endpoint_handle;
+   PlatformHandle::ToMojoPlatformHandle(channel_endpoint.TakePlatformHandle(),
+                                        &endpoint_handle);
+-  CHECK_NE(endpoint_handle.type, MOJO_PLATFORM_HANDLE_TYPE_INVALID);
++  //CHECK_NE(endpoint_handle.type, MOJO_PLATFORM_HANDLE_TYPE_INVALID);
+ 
+   MojoInvitationTransportEndpoint transport_endpoint;
+   transport_endpoint.struct_size = sizeof(transport_endpoint);
+diff --git a/services/BUILD.gn b/services/BUILD.gn
+index a98c03b..827da8e 100644
+--- a/services/BUILD.gn
++++ b/services/BUILD.gn
+@@ -189,3 +189,5 @@ if (is_android) {
+     ]
+   }
+ }
++
++
+diff --git a/services/content/service.cc b/services/content/service.cc
+index f8be886..208678c 100644
+--- a/services/content/service.cc
++++ b/services/content/service.cc
+@@ -25,6 +25,7 @@ Service::Service(ServiceDelegate* delegate) : delegate_(delegate) {
+                                                            std::move(request)));
+       },
+       this));
++  LOG(INFO) << "------------------------------------";
+ }
+ 
+ Service::~Service() {
+diff --git a/third_party/blink/renderer/core/exported/web_view_impl.cc b/third_party/blink/renderer/core/exported/web_view_impl.cc
+index 35a2a48..8095ef0 100644
+--- a/third_party/blink/renderer/core/exported/web_view_impl.cc
++++ b/third_party/blink/renderer/core/exported/web_view_impl.cc
+@@ -165,6 +165,8 @@
+ #include "third_party/blink/renderer/platform/scroll/scrollbar_theme.h"
+ #include "third_party/blink/renderer/platform/weborigin/scheme_registry.h"
+ #include "third_party/blink/renderer/platform/wtf/time.h"
++#include "base/task_scheduler/post_task.h"
++#include "base/bind.h"
+ 
+ #if defined(WTF_USE_DEFAULT_RENDER_THEME)
+ #include "third_party/blink/renderer/core/layout/layout_theme_default.h"
+@@ -2304,10 +2306,20 @@ double WebViewImpl::ZoomLevel() {
+   return zoom_level_;
+ }
+ 
++/*void Test() {
++  LOG(INFO) << "**********testing**********" << Platform::Current()->CurrentThread();
++}*/
++
+ void WebViewImpl::PropagateZoomFactorToLocalFrameRoots(Frame* frame,
+                                                        float zoom_factor) {
++  /*if (Platform::Current()->CurrentThread())
++    LOG(INFO) << "***current thread id = " <<Platform::Current()->CurrentThread()->ThreadId();
++  else
++    LOG(INFO) << "***there is no current thread";*/
++
+   if (frame->IsLocalFrame() && ToLocalFrame(frame)->IsLocalRoot()) {
+     LocalFrame* local_frame = ToLocalFrame(frame);
++    //LOG(INFO) << "************* deal with" << local_frame;
+     if (Document* document = local_frame->GetDocument()) {
+       if (!document->IsPluginDocument() ||
+           !ToPluginDocument(document)->GetPluginView()) {
+@@ -2317,8 +2329,13 @@ void WebViewImpl::PropagateZoomFactorToLocalFrameRoots(Frame* frame,
+   }
+ 
+   for (Frame* child = frame->Tree().FirstChild(); child;
+-       child = child->Tree().NextSibling())
++       child = child->Tree().NextSibling()) {
++
++    //LOG(INFO) << "*************WebViewImpl::PropagateZoomFactorToLocalFrameRoots post task*************" << Platform::Current()->CurrentThread()->ThreadId();
++    //base::PostTask(FROM_HERE, base::BindOnce(&WebViewImpl::PropagateZoomFactorToLocalFrameRoots, base::Unretained(this), child, zoom_factor));
++
+     PropagateZoomFactorToLocalFrameRoots(child, zoom_factor);
++  }
+ }
+ 
+ double WebViewImpl::SetZoomLevel(double zoom_level) {
+diff --git a/third_party/blink/renderer/core/frame/BUILD.gn b/third_party/blink/renderer/core/frame/BUILD.gn
+index faf80c7..dd0ffa0 100644
+--- a/third_party/blink/renderer/core/frame/BUILD.gn
++++ b/third_party/blink/renderer/core/frame/BUILD.gn
+@@ -179,4 +179,9 @@ blink_core_sources("frame") {
+     "web_view_frame_widget.cc",
+     "web_view_frame_widget.h",
+   ]
++
++  deps = [
++    "//sample:mojom",
++    "//services/cctest/public:mojom",
++  ]
+ }
+diff --git a/third_party/blink/renderer/core/frame/local_frame_view.cc b/third_party/blink/renderer/core/frame/local_frame_view.cc
+index 3096bad..b124404 100644
+--- a/third_party/blink/renderer/core/frame/local_frame_view.cc
++++ b/third_party/blink/renderer/core/frame/local_frame_view.cc
+@@ -139,6 +139,13 @@
+ #include "third_party/blink/renderer/platform/ukm_time_aggregator.h"
+ #include "third_party/blink/renderer/platform/wtf/std_lib_extras.h"
+ #include "third_party/blink/renderer/platform/wtf/time.h"
++#include "base/task_scheduler/post_task.h"
++#include "base/bind.h"
++
++#include "third_party/blink/public/platform/platform.h"
++#include "services/service_manager/public/cpp/connector.h"
++#include "services/cctest/public/logger.mojom.h"
++
+ 
+ // Used to check for dirty layouts violating document lifecycle rules.
+ // If arg evaluates to true, the program will continue. If arg evaluates to
+@@ -806,6 +813,37 @@ void LocalFrameView::ScheduleOrPerformPostLayoutTasks() {
+   }
+ }
+ 
++
++
++/*class LoggerImpl : public sample::mojom::Logger {
++ public:
++  // NOTE: A common pattern for interface implementations which have one
++  // instance per client is to take an InterfaceRequest in the constructor.
++
++  explicit LoggerImpl(sample::mojom::LoggerRequest request)
++      : binding_(this, std::move(request)) {}
++  ~LoggerImpl() override {}
++
++  // sample::mojom::Logger:
++  void Log(const std::string& message) override {
++    LOG(INFO) << "[Logger] " << message << std::endl;
++  }
++
++ private:
++  mojo::Binding<sample::mojom::Logger> binding_;
++
++  DISALLOW_COPY_AND_ASSIGN(LoggerImpl);
++};*/
++
++
++
++/*void test(sample::mojom::LoggerRequest request) {
++  LOG(INFO) << "begin test()";
++  LoggerImpl impl(std::move(request));
++  LOG(INFO) << "end test()";
++}*/
++
++
+ void LocalFrameView::UpdateLayout() {
+   // We should never layout a Document which is not in a LocalFrame.
+   DCHECK(frame_);
+@@ -823,6 +861,26 @@ void LocalFrameView::UpdateLayout() {
+ 
+     RUNTIME_CALL_TIMER_SCOPE(V8PerIsolateData::MainThreadIsolate(),
+                              RuntimeCallStats::CounterId::kUpdateLayout);
++    static int pass = 0;
++    static int subpass = 0;
++    if (!subpass) {
++      pass++;
++    } 
++    subpass++;
++
++    LOG(INFO) << "LocalFrameView::UpdateLayout pass: NO." << pass << "." << subpass << " begin";
++
++    LOG(INFO) << "LocalFrameView::UpdateLayout send msg";
++    cctest::mojom::LoggerPtr logger;
++    Platform::Current()->GetConnector()->BindInterface(cctest::mojom::kServiceName, &logger);
++    logger->Log("I must call a thousand times...");
++
++    //sample::mojom::LoggerPtr logger;
++    //auto request = mojo::MakeRequest(&logger);
++    //logger->Log("Hello!");
++
++    //base::PostTask(FROM_HERE, base::BindOnce(&test, request));
++
+ 
+     // The actual call to UpdateGeometries is in PerformPostLayoutTasks.
+     SetNeedsUpdateGeometries();
+@@ -974,6 +1032,10 @@ void LocalFrameView::UpdateLayout() {
+     ScheduleOrPerformPostLayoutTasks();
+     CheckDoesNotNeedLayout();
+ 
++
++    LOG(INFO) << "LocalFrameView::UpdateLayout pass: NO." << pass << "." << subpass << " end";
++    subpass--;
++
+     // FIXME: The notion of a single root for layout is no longer applicable.
+     // Remove or update this code. crbug.com/460596
+     TRACE_EVENT_END1("devtools.timeline", "Layout", "endData",
+@@ -2204,6 +2266,9 @@ void LocalFrameView::UpdateGeometriesIfNeeded() {
+     if (!GetLayoutView())
+       break;
+ 
++    //LocalFrameView * v = ToLocalFrameView(view.Get());
++    //base::PostTask(FROM_HERE, base::BindOnce(&LocalFrameView::UpdateGeometry, base::Unretained(v)));
++
+     view->UpdateGeometry();
+   }
+ }
+diff --git a/third_party/blink/renderer/core/frame/local_frame_view.h b/third_party/blink/renderer/core/frame/local_frame_view.h
+index c0b189a..1ea66cc 100644
+--- a/third_party/blink/renderer/core/frame/local_frame_view.h
++++ b/third_party/blink/renderer/core/frame/local_frame_view.h
+@@ -43,6 +43,8 @@
+ #include "third_party/blink/renderer/core/paint/layout_object_counter.h"
+ #include "third_party/blink/renderer/platform/graphics/graphics_layer_client.h"
+ #include "third_party/blink/renderer/platform/scroll/scrollable_area.h"
++//#include "sample/logger.mojom.h"
++//#include "base/macros.h"
+ 
+ namespace blink {
+ 
+@@ -944,6 +946,8 @@ class CORE_EXPORT LocalFrameView final
+ 
+   Member<PrintContext> print_context_;
+ 
++  //sample::mojom::LoggerPtr logger;
++
+   // From the beginning of the document, how many frames have painted.
+   size_t paint_frame_count_;
+ 
+diff --git a/ui/views/widget/desktop_aura/x11_desktop_handler.cc b/ui/views/widget/desktop_aura/x11_desktop_handler.cc
+index 9ac94ba1..f1c471d2 100644
+--- a/ui/views/widget/desktop_aura/x11_desktop_handler.cc
++++ b/ui/views/widget/desktop_aura/x11_desktop_handler.cc
+@@ -126,6 +126,7 @@ void X11DesktopHandler::OnWindowCreatedOrDestroyed(int event_type,
+   // coordinates and stacking order to eliminate repeated calls to the X server
+   // during mouse movement, drag and shaping events.
+   if (event_type == CreateNotify) {
++    return;
+     // The window might be destroyed if the message pump did not get a chance to
+     // run but we can safely ignore the X error.
+     gfx::X11ErrorTracker error_tracker;
