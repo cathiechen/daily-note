@@ -1,0 +1,8 @@
+# locate: third_party/WebKit/LayoutTests/flag-specific/enable-blink-features=LayoutNG/cc_rebaseline
+
+mkdir -p fast/dynamic/;
+cd fast/dynamic/;
+wget https://test-results.appspot.com/data/layout_results/linux_layout_tests_layout_ng/8527/layout-test-results/fast/dynamic/first-letter-after-list-marker-actual.txt;
+mv first-letter-after-list-marker-actual.txt first-letter-after-list-marker-expected.txt;
+
+
