@@ -1,0 +1,3 @@
+ssh -p 6622 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost
+
+

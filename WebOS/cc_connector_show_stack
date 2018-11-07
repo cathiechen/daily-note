@@ -1,0 +1,17 @@
+ulimit -c unlimited
+
+./cc_run
+
+sysctl -w kernel.core_pattern=./tmp/stack_pack
+
+echo "==============start gdb================="
+echo "1. symbol-file content_shell"
+echo "2. bt"
+echo "==============================="
+
+
+gdb -c ./tmp/stack_pack*
+
+
+rm ./tmp/stack_pack*
+

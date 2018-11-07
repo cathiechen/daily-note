@@ -1,0 +1,12 @@
+ares-push --device  emulator out/qemux/Release/content_shell /home/developer
+
+ares-push --device  emulator out/qemux/Release/content_shell.pak /home/developer
+
+ares-push --device  emulator out/qemux/Release/natives_blob.bin /home/developer
+
+ares-push --device  emulator out/qemux/Release/snapshot_blob.bin /home/developer
+
+ares-push --device  emulator src/content/shell/tencent/js /home/developer
+
+ares-push --device  emulator src/content/shell/tencent/pkg /home/developer
+

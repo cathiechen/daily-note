@@ -1,0 +1,1 @@
+ares-push --device  emulator out/qemux/Release/content_shell /home/developer
