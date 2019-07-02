@@ -15,3 +15,5 @@ CR过程中提到很多很初级的错误，记录下来，尽量以后不犯这
 11. if... else if ... else 的{}，要么全有，要么全没有！
 12. 函数尽早return
 13. if (xxx == 0)写成if (!xxx)
+
+14. argument ordering wrong. const references / values, then mutable pointers.
