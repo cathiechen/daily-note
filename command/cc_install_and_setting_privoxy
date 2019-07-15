@@ -1,0 +1,14 @@
+
+1. sudo apt-get install privoxy
+
+2. sudo vim /etc/privoxy/config
+
+forward-socks5   /               127.0.0.1:1080 .
+
+// this is set by default, so no need to add it.
+listen-address localhost:8118
+
+3.sudo systemctl restart privoxy
+
+4. export http_proxy=http://127.0.0.1:8118/ 
+
