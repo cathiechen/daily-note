@@ -15,3 +15,11 @@
 #10 0x00007f136fe58b12 in WebKit::WebPage::layoutIfNeeded (this=0x7f134deca000) at ../../Source/WebKit/WebProcess/WebPage/WebPage.cpp:1607
 
 ```
+
+
+## How to fixed crash that JS change a Vector while we are traveling it.
+
+- Normally, copy the Vector and add null checking
+- Example: `https://bugs.webkit.org/show_bug.cgi?id=200635`
+
+
