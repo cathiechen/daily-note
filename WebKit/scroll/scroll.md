@@ -1,4 +1,8 @@
-Scroll triggered by UI process. From UI Process To Web Process, then back to UI Process
+#Scroll process in WebKit
+
+##Scroll triggered by UI process. From UI Process To Web Process, then back to UI Process
+
+### UI process:
 
 ```
 #0  0x0000000114dae647 in WebKit::RemoteScrollingCoordinatorProxy::scrollingTreeNodeDidScroll(unsigned long long, WebCore::FloatPoint const&, WTF::Optional<WebCore::FloatPoint> const&, WebCore::ScrollingLayerPositionAction) at /Users/cathiechen/cc/source/WebKit/Source/WebKit/UIProcess/RemoteLayerTree/RemoteScrollingCoordinatorProxy.cpp:224
@@ -11,10 +15,12 @@ Scroll triggered by UI process. From UI Process To Web Process, then back to UI 
 
 In `RemoteScrollingCoordinatorProxy::scrollingTreeNodeDidScroll` send message to web process by `m_webPageProxy.send(Messages::RemoteScrollingCoordinator::ScrollPositionChangedForNode)`. 
 
-In Web Process:
+### In Web Process:
 
+```
 #0  0x0000000516943545 in WebCore::AsyncScrollingCoordinator::scheduleUpdateScrollPositionAfterAsyncScroll(unsigned long long, WebCore::FloatPoint const&, WTF::Optional<WebCore::FloatPoint> const&, WebCore::ScrollingLayerPositionAction) at /Users/cathiechen/cc/source/WebKit/Source/WebCore/page/scrolling/AsyncScrollingCoordinator.cpp:291
 #1  0x0000000107c51c5f in WebKit::RemoteScrollingCoordinator::scrollPositionChangedForNode(unsigned long long, WebCore::FloatPoint const&, bool) at /Users/cathiechen/cc/source/WebKit/Source/WebKit/WebProcess/WebPage/RemoteLayerTree/RemoteScrollingCoordinator.mm:99
+```
 
 Start a timer m_updateNodeScrollPositionTimer. When it fired, or the scroll action matches.
 
@@ -51,6 +57,9 @@ if (usesCompositedScrolling())
     setNeedsCompositingGeometryUpdate();
 ```
 
+The prcess:
+
+```
 RenderLayerCompositor:
     RenderLayerCompositor::updateBackingAndHierarchy
         => update RenderLayer layer flags, e.g. needsCompositingGeometryUpdate
@@ -59,6 +68,8 @@ RenderLayerCompositor:
         => deal with child layers.
 
 Then RenderLayerCompositor will call RenderLayerBacking's updateGeometry: change the origin of GraphicsLayer and others scroll offset and size.
+
+```
 
 ```
 #0  0x0000000516b03e20 in WebCore::GraphicsLayer::syncBoundsOrigin(WebCore::FloatPoint const&) at /Users/cathiechen/cc/source/WebKit/Source/WebCore/platform/graphics/GraphicsLayer.h:349
@@ -76,6 +87,9 @@ Then RenderLayerCompositor will call RenderLayerBacking's updateGeometry: change
 
 ```
 
+The process:
+
+```
 RenderLayerBacking::updateGeometry
     update size of m_graphicsLayer,
     RenderLayerBacking::updateScrollOffset, actually change the bounds origin of m_scrollContainerLayer by m_scrollContainerLayer->syncBoundsOrigin
@@ -83,9 +97,11 @@ RenderLayerBacking::updateGeometry
     setRequiresOwnBackingStore
         => m_owningLayer.computeRepaintRectsIncludingDescendants(); 
         => compositor().repaintInCompositedAncestor
+```
 
 Then call layerBacking->updateEventRegion():
 
+```
 RenderLayerBacking::updateEventRegion
     => m_owningLayer.paintLayerContents
     => eventRegion.translate(layerOffset);
@@ -95,8 +111,10 @@ RenderLayerBacking::updateEventRegion
                 => compositor().scheduleLayerFlush
                 => RenderLayerCompositor::scheduleLayerFlush
                 => page().renderingUpdateScheduler().scheduleRenderingUpdate()
+```
 
 This will schedule flush, see:
+
 ```
 
 #0  0x0000000106ff8511 in WebKit::RemoteLayerTreeDrawingArea::scheduleCompositingLayerFlush() at /Users/cathiechen/cc/source/WebKit/Source/WebKit/WebProcess/WebPage/RemoteLayerTree/RemoteLayerTreeDrawingArea.mm:301
@@ -119,7 +137,7 @@ ScrollingTree, ThreadedScrollingTree, have ScrollingTreeScrollingNode which migh
 RemoteScrollingCoordinatorTransaction::encode will encode its rootNode i.e. ScrollingStateFrameScrollingNode and its children node, e.g. ScrollingStateOverflowScrollingNode which might set ScrollingStateScrollingNode::RequestedScrollPosition, but not in this case.
 
 
-Back to UI Process:
+### Back to UI Process:
 Through IPC, RemoteScrollingCoordinatorTransaction::decode is called in UI porcess which will get info from RemoteScrollingCoordinatorTransaction.
 
 ```
@@ -151,8 +169,9 @@ Then called `RemoteLayerTreeDrawingAreaProxy::commitLayerTree`, but won't change
 
 
 -------------
-ScrollOffset snyc from Web Process To UI process: ProgrammaticScroll, e.g. getElementById(x).scrollLeft = xx;
+## ScrollOffset snyc from Web Process To UI process: ProgrammaticScroll, e.g. getElementById(x).scrollLeft = xx;
 
+### Web Process
 ```
 #0  0x0000000517051861 in WebCore::RenderLayer::scrollToOffset(WebCore::IntPoint const&, WebCore::ScrollType, WebCore::ScrollClamping) at /Users/cathiechen/cc/source/WebKit/Source/WebCore/rendering/RenderLayer.cpp:2498
 #1  0x0000000517051c25 in WebCore::RenderLayer::scrollToYPosition(int, WebCore::ScrollType, WebCore::ScrollClamping) at /Users/cathiechen/cc/source/WebKit/Source/WebCore/rendering/RenderLayer.cpp:2478
@@ -248,7 +267,7 @@ Then call `RemoteLayerTreeDrawingArea::flushLayers`, constuct RemoteScrollingCoo
 
 
 
-UI process:
+### UI process:
 
 Get the msg decode, then call `RemoteLayerTreeDrawingAreaProxy::CommitLayerTree`. From RemoteScrollingCoordinatorTransaction, `RemoteScrollingCoordinatorProxy::commitScrollingTreeState` will get the stateTree which will apply to the m_scrollingTree by `m_scrollingTree->commitTreeState`. In `ScrollingTreeScrollingNodeDelegateIOS::commitStateAfterChildren`, it will deal with different actions, like: ScrollContainerLayer, ScrollPosition, ScrollOrigin, etc. For RequestedScrollPosition, it will call  scrollingNode().scrollTo which will change the contentOffset of UI scrollView. 
 
