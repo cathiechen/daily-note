@@ -1,6 +1,6 @@
-#Scroll process in WebKit
+# Scroll process in WebKit
 
-##Scroll triggered by UI process. From UI Process To Web Process, then back to UI Process
+## Scroll triggered by UI process. From UI Process To Web Process, then back to UI Process
 
 ### UI process:
 
