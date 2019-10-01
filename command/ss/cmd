@@ -4,5 +4,10 @@ chmod +x shadowsocks-all.sh
 
 ./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
 
+/etc/init.d/shadowsocks-libev status
+
+# vi /etc/shadowsocks-libev/config.json
+
+# /etc/init.d/shadowsocks-libev restart
 
 
